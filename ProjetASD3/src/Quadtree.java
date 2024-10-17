@@ -1,4 +1,5 @@
 import java.awt.*;
+@SuppressWarnings("unused")
 
 public class Quadtree {
 
