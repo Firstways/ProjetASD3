@@ -1,5 +1,9 @@
 import java.awt.Color;
 
+import Projet.Image;
+import Projet.Point;
+import Projet.Quadtree;
+
 
 @SuppressWarnings("unused")
 
@@ -31,10 +35,24 @@ Les armuments sont :
         img.setRectangle(0, 1000, 0, 1000,col );
         img.save("square");
 
+ 
 
-    
+        Point p1 = new Point(100,100);
+        Point p2 = new Point(50,50);
+        Point p3 = new Point(75,15);
+        Point p4 = new Point(60,34);
 
-          
+        Quadtree regionAB = new Quadtree(null,null,null,null,p3);
+
+        Quadtree regionA = new Quadtree(null,regionAB,null,null,p2);
+
+        Quadtree quad_final = new Quadtree(regionA,null,null,null,p1);
+
+        System.out.println("p1"+regionA.getNe());
+        Quadtree result = quad_final.searchQTree(quad_final,p4);
+        System.out.println("P2"+result);
+
+        
         
     }
 }
