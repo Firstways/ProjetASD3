@@ -170,11 +170,45 @@ public class Quadtree {
 
     /*
      * Génère une image a partir du quadtree
+     * Attention 0,0 = haut gauche
      */
-    public void toImage(String filename){
-        Image img = new Image(1000,1000);
+    public void toImage(String filename,Image img){
+        if (this == null){
+            return;
+        }else {   
+            if (!(this.is_empty)){
+                if (this.No != null){
+                    System.out.println("NO");
+                    img.setRectangle( this.point.getX()-this.No.point.getX(),this.point.getY()-this.No.point.getY(), this.point.getX(),this.point.getY(), null);
+                    this.No.toImage(filename, img);
+                }
 
+                if (this.Ne != null){
+                    System.out.println("Ne");
+                    img.setRectangle( this.Ne.point.getX()-this.point.getX(),this.point.getY()-this.Ne.point.getY(), this.point.getX(),this.Se.point.getY(), null);
+
+                    this.Ne.toImage(filename, img);
+
+
+                }
+
+                if (this.Se != null){
+                    System.out.println("sE");
+                    this.Se.toImage(filename, img);
+
+                } 
+
+                else {
+                    System.out.println("sO");
+                    this.So.toImage(filename, img);
+
+                }
+            }else {
+                
+            }
+        }
     }
+
 
 
     /*
