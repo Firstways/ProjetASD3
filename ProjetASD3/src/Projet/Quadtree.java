@@ -68,66 +68,29 @@ public class Quadtree {
      * Retourne la feuille à laquel le point appartient
      */
     public Quadtree searchQTree(Quadtree current_quad, Point precherche){
-        if (current_quad.is_empty){
+        if (current_quad.is_empty()){
+            return current_quad;
+        }
+        else {
             // appartient a la region 1
-            Point p = current_quad.point;
+            Point p = current_quad.getP();
             if (precherche.getX() < p.getX() && precherche.getY() < p.getY()) {
-                System.out.println("REGION 1");
-
-                return current_quad.No;
+                searchQTree(current_quad.getNo(), precherche);
             }
-
             // appartient a la region 2
             if (precherche.getX() > p.getX() && precherche.getY() < p.getY()) {
-                System.out.println("REGION 2");
-
-                return current_quad.Ne;
-
+                searchQTree(current_quad.getNe(), precherche);
             }
             // appartient a la region 3
             if (precherche.getX() > p.getX() && precherche.getY() > p.getY()) {
-                System.out.println("REGION 3");
-
-                return current_quad.Se;
-
+                searchQTree(current_quad.getSe(), precherche);
             }
             // appartient a la region 4
-            else  {
-                System.out.println("REGION 4");
-
-                return current_quad.So;
-
-            }
-        }else {
-            if (current_quad.No != null){
-                System.out.println("NO");
-
-                return searchQTree(current_quad.No, precherche);
-            }
-
-            if (current_quad.Ne != null){
-                System.out.println("Ne");
-
-                return searchQTree(current_quad.Ne, precherche);
-
-            }
-
-            if (current_quad.Se != null){
-                System.out.println("sE");
-
-                return searchQTree(current_quad.Se, precherche);
-            } 
-
-            else {
-                System.out.println("sO");
-
-                return searchQTree(current_quad.So, precherche);
+            if (precherche.getX() < p.getX() && precherche.getY() > p.getY()) {
+                searchQTree(current_quad.getSo(), precherche);
             }
         }
-      
-        
-
-
+        return null; // retire les warning cas impossible
     }
 
   
