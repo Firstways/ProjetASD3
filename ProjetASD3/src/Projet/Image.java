@@ -37,7 +37,7 @@ public class Image
    * WARNING : END COORDINATES EXCLUDED.
    * WARNING : NO CHECK IS DONE. IF YOU WRITE OUTSIDE THE IMAGE IT WILL RAISE AN ERROR
    */
-  public void setRectangle(int startX, int endX, int startY, int endY, Color color) {
+  public void setRectangle(int startX, int startY, int endX, int endY, Color color) {
     for(int x = startX; x < endX; x++) {
       for(int y = startY; y < endY; y++) {
         setPixel(x,y,color);

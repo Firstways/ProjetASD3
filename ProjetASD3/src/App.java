@@ -3,6 +3,7 @@ import java.awt.Color;
 import Projet.Image;
 import Projet.Point;
 import Projet.Quadtree;
+import java.util.*;
 
 
 @SuppressWarnings("unused")
@@ -30,29 +31,52 @@ Les armuments sont :
         // String sortie = args[2];
 
 
+        // Image img = new Image(1000, 1000);
+        // Color col = Color.RED;
+        // img.setRectangle(0, 0, 1000, 1000,col );
+        // img.save("square");
+
+        // col = Color.BLUE;
+        // img.setRectangle(100, 100, 200, 200,col );
+        // img.save("square");
+
+    
+
+
+
+        Color[] colors_region1 = { Color.RED, Color.GREEN, Color.BLUE, Color.GRAY};
+        Color[] colors_region2 = { Color.YELLOW, Color.PINK, Color.ORANGE, Color.CYAN};
+        Color[] colors_region3 = { Color.LIGHT_GRAY, Color.MAGENTA, Color.WHITE, Color.BLACK};
+
+        Point p1 = new Point(500,500,colors_region1);
+        Point p2 = new Point(400,400,colors_region2);
+
+
+
+        Point p3 = new Point(800,100,colors_region3);
+        Point p4 = new Point(100,600,colors_region2);
+
+        Point p5 = new Point(150,150,colors_region2);
+
+
+
+        
+        Quadtree quad_test = new Quadtree(null,null,null,null,p1);
+        quad_test.addQTree(p2);
+        // quad_test.addQTree(p3);
+        // quad_test.addQTree(p4);
+        quad_test.addQTree(p5);
+        System.out.println("");
+
         Image img = new Image(1000, 1000);
-        Color col = Color.GRAY;
-        img.setRectangle(0, 1000, 0, 1000,col );
-        img.save("square");
 
- 
+        quad_test.toImage("square", img);
+        try {
+            img.save("square");
 
-        Point p1 = new Point(100,100);
-        Point p2 = new Point(50,50);
-        Point p3 = new Point(75,15);
-        Point p4 = new Point(60,34);
-
-        Quadtree regionAB = new Quadtree(null,null,null,null,p3);
-
-        Quadtree regionA = new Quadtree(null,regionAB,null,null,p2);
-
-        Quadtree quad_final = new Quadtree(regionA,null,null,null,p1);
-
-        System.out.println("p1"+regionA.getNe());
-        Quadtree result = quad_final.searchQTree(quad_final,p4);
-        System.out.println("P2"+result);
-
-        
-        
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
     }
 }
