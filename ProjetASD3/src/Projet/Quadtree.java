@@ -1,4 +1,6 @@
 package Projet;
+import static org.junit.Assert.assertTrue;
+
 import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Array;
@@ -53,263 +55,13 @@ public class Quadtree {
         return this.Ne;
     }
     public Quadtree getSe(){
-        return this.So;
+        return this.Se;
     }
     public Quadtree getSo(){
-        return this.Se;
+        return this.So;
     }
     public Point getPoint(){
         return this.point;
-    }
-
-    public String getStringRegion(){
-        return this.region;
-    }
-    public void setStringRegion(String region){
-        this.region=region;
-    }
-
-    public boolean is_empty(){
-        if ((this.Ne ==null)&&(this.No ==null)&&(this.Se ==null)&&(this.So ==null)){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    /*
-     * Retourne la feuille à laquel le point appartient
-     * Précondition quadtree!= null
-     */
-    public Dual searchQTree(Point p){
-        /*
-         * Si le quad a 4 feuilles vide, je regarde à quelle region appartient le point
-         * et je retourne le pointeur de région
-         * Sinon je regarde à quelle région appartient le point et je descend
-         * 
-         * 
-         * Je regarde à quelle région appartient le point
-         * Si le quad à 4 feuilles vide je retourne le pointeur
-         * Sinon je descend
-         */
-        Point p2 = this.getPoint();
-        if (this.is_empty()){
-           
-            if (p.getX() < p2.getX() && p.getY() < p2.getY() && this.No == null) {
-                System.out.println("No");
-                return new Dual(this,"No");
-            }
-            // appartient a la region 2
-            else if (p.getX() > p2.getX() && p.getY() < p2.getY()&& this.Ne == null ) {
-                return new Dual(this,"Ne");
-
-            }
-            // appartient a la region 3
-            else if (p.getX() > p2.getX() && p.getY() > p2.getY()&& this.Se == null) {
-                return new Dual(this,"NSe");
-            }
-           // appartient a la region 4
-            else  if (p.getX() < p2.getX() && p.getY() > p2.getY()&& this.So == null) {
-                return new Dual(this,"So");
-            }
-            else {
-                throw new IllegalArgumentException("Region non trouvée: merci de mettre de traiter les cas ou deux points ne sont pas sur le meme axe en X ou Y");
-            }
-        }else{
-            System.out.println("pas empty");
-
-            if (p.getX() < p2.getX() && p.getY() < p2.getY() && this.No !=null) {
-                 System.out.println("région 1");
-                 return this.getNo().searchQTree( p);
-
-
-            }
-            // appartient a la region 2
-            else if (p.getX() > p2.getX() && p.getY() < p2.getY() && this.Ne!=null) {
-                 System.out.println("région 2");
-                 return this.getNe().searchQTree( p);
-
-
-            }
-            // appartient a la region 3
-            else if (p.getX() > p2.getX() && p.getY() > p2.getY() && this.Se !=null) {
-                 System.out.println("région 3");
-                 return this.getSe().searchQTree(p);
-
-
-            }
-            // appartient a la region 4
-            else   if (p.getX() < p2.getX() && p.getY() > p2.getY() && this.Se !=null) {
-                 System.out.println("région 4");
-                 return this.getSo().searchQTree( p);
-
-
-            } else {
-                throw new IllegalArgumentException("Arbre non vide et region non trouvée: merci de mettre de traiter les cas ou deux points ne sont pas sur le meme axe en X ou Y");
-            }
-        }
-
-    }
-
-  
-    /*
-     * A partir d'un nombre de point
-     * creer le Qtree final avec tous les points
-     * Précondition: A != null
-     */
-    public void addQTree(Point p){
-        // Si le quadtree n'a pas de point deja placé alors
-        // il ne sert a rien de recherche sa region
-        Dual region_recherche = searchQTree(p);
-        if (region_recherche.region=="No"){
-            region_recherche.quad.No = new Quadtree(p);
-        }else if (region_recherche.region=="Ne"){
-            region_recherche.quad.Ne = new Quadtree(p);
-        }
-        else if (region_recherche.region=="Se"){
-            region_recherche.quad.Se = new Quadtree(p);
-        }else if (region_recherche.region=="So"){
-            region_recherche.quad.So = new Quadtree(p);
-        }else {
-            throw new IllegalArgumentException(" Erreur inconnue merci de prendre contact avec les programmeurs");
-        }
-        System.out.println("point recherche :"+ p.getX()+":"+p.getY());
-        System.out.println("region No,Ne,Se,So :"+  this.No+this.Ne +this.Se+this.So);
-
-        /*
-         *       
-         * 
-         */
-        // Point p2 = this.getPoint();
-        // if (this.is_empty()){
-        //     System.out.println("point recherche :"+ p.getX()+":"+p.getY());
-        //     System.out.println("region No,Ne,Se,So :"+  this.No+this.Ne +this.Se+this.So);
-
-        //     if (p.getX() < p2.getX() && p.getY() < p2.getY() && this.No == null) {
-        //         System.out.println("No");
-        //         this.No=new Quadtree(p);
-        //     }
-        //     // appartient a la region 2
-        //     else if (p.getX() > p2.getX() && p.getY() < p2.getY()&& this.Ne == null ) {
-        //         this.Ne=new Quadtree(p);
-
-        //     }
-        //     // appartient a la region 3
-        //     else if (p.getX() > p2.getX() && p.getY() > p2.getY()&& this.Se == null) {
-        //         this.Se=new Quadtree(p);
-
-        //     }
-        //    // appartient a la region 4
-        //     else  if (p.getX() < p2.getX() && p.getY() > p2.getY()&& this.So == null) {
-        //         this.So=new Quadtree(p);
-        //     }
-        //     else {
-        //         throw new IllegalArgumentException("Region non trouvée: merci de mettre de traiter les cas ou deux points ne sont pas sur le meme axe en X ou Y");
-        //     }
-        // }else{
-        //     System.out.println("pas empty");
-
-        //     if (p.getX() < p2.getX() && p.getY() < p2.getY() && this.No !=null) {
-        //         this.getNo().addQTree( p);
-        //          System.out.println("région 1");
-
-        //     }
-        //     // appartient a la region 2
-        //     else if (p.getX() > p2.getX() && p.getY() < p2.getY() && this.Ne!=null) {
-        //         this.getNe().addQTree( p);
-        //          System.out.println("région 2");
-
-        //     }
-        //     // appartient a la region 3
-        //     else if (p.getX() > p2.getX() && p.getY() > p2.getY() && this.Se !=null) {
-        //         this.getSe().addQTree(p);
-        //          System.out.println("région 3");
-
-        //     }
-        //     // appartient a la region 4
-        //     else  {
-        //         this.getSo().addQTree( p);
-        //          System.out.println("région 4");
-
-        //     }
-        // }
-    }
-
-
-    /*
-     *  construit le quadtree entier en utilisant les fonctions
-     *  précéedentes.
-     */
-    public void buildQTree(Point[] points){
-        for (Point point : points){
-            this.addQTree(point);
-        }
-    }
-
-
-    
-
-    public void toImageEncaps(String filename,Image img,int Xmin, int Ymin, int Xmax, int Ymax){
-        // System.out.println("Coordonnées :");
-        // System.out.println("Xmin : " + Xmin);
-        // System.out.println("Ymin : " + Ymin);
-        // System.out.println("Xmax : " + Xmax);
-        // System.out.println("Ymax : " + Ymax);
-        // System.out.println("Px : " +  this.getPoint().getX());
-        // System.out.println("PY : " + this.getPoint().getY());
-        // System.out.println("this : " + this);
-
-        if (this == null){
-            return;
-        }else { 
-            img.setRectangle(Xmin, Ymin, this.getPoint().getX(), this.getPoint().getY(), getColorNo());
-            img.setRectangle( this.getPoint().getX(),Ymin,Xmax, this.getPoint().getY(), getColorNe());
-            img.setRectangle(this.point.getX(),this.point.getY(), Xmax, Ymax, getColorSe());
-            img.setRectangle(Xmin,this.point.getY(),this.getPoint().getX(), Ymax, getColorSo());
-           
-                if (this.No != null){
-                    System.out.println("NO");
-                    //img.setRectangle(Xmin, Ymin, this.getPoint().getX(), this.getPoint().getY(), getColorNo());
-            
-
-                    this.No.toImageEncaps(filename, img, Xmin, Ymin, this.getPoint().getX(), this.getPoint().getY());
-                }
-
-                if (this.Ne != null){
-                    System.out.println("Ne");
-                    //img.setRectangle( this.getPoint().getX(),Ymin,Xmax, this.getPoint().getY(), getColorNe());
-            
-                    this.Ne.toImageEncaps(filename, img, this.getPoint().getX(), Ymin, Xmax, this.getPoint().getY());
-                }
-
-                if (this.Se != null){
-                    System.out.println("sE");
-                    //img.setRectangle(this.point.getX(),this.point.getY(), Xmax, Ymax, getColorSe());
-
-
-                    this.Se.toImageEncaps(filename, img, this.getPoint().getX(), this.getPoint().getY(), Xmax, Ymax);
-                } 
-
-                if (this.So != null){
-                    System.out.println("sO");
-                    //img.setRectangle(Xmin,this.point.getY(),this.getPoint().getX(), Ymax, getColorSo());
-  
-
-                    this.So.toImageEncaps(filename, img, Xmin, this.getPoint().getY(), this.getPoint().getX(), Ymax);
-                }
-          
-        }
- 
-    }
-    /*
-     * Génère une image a partir du quadtree
-     * Attention 0,0 = haut gauche
-     */
-    public void toImage(String filename,Image img){
-      
-
-      toImageEncaps(filename, img, 0, 0, img.width(), img.height());  
-            
     }
 
     public String colorIdentifier(Color color ){
@@ -366,6 +118,233 @@ public class Quadtree {
         Color c = this.getPoint().getColors()[3];
         return colorIdentifier(c);
     }
+
+    public boolean is_empty(){
+        if ((this.Ne ==null)&&(this.No ==null)&&(this.Se ==null)&&(this.So ==null)){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    /*
+     * Retourne la feuille à laquel le point appartient
+     * Précondition quadtree!= null
+     */
+    public Dual searchQTree(Point point_enfant){
+        /*
+         * Si le quad a 4 feuilles vide, je regarde à quelle region appartient le point
+         * et je retourne le pointeur de région
+         * Sinon je regarde à quelle région appartient le point et je descend
+         * 
+         * 
+         * Je regarde à quelle région appartient le point
+         * Si le quad à 4 feuilles vide je retourne le pointeur
+         * Sinon je descend
+         */
+        Point point_parent = this.getPoint();
+        
+        int X_parent = point_parent.getX();
+        int Y_parent= point_parent.getY();
+
+        int X_enfant = point_enfant.getX();
+        int Y_enfant = point_enfant.getY();
+
+  
+   
+           
+        if (X_enfant <X_parent && Y_enfant < Y_parent) {
+            if (this.No !=null){
+                return this.getNo().searchQTree(point_enfant);
+
+            }else {
+                System.out.println("No");
+                return new Dual(this,"No");
+            }
+            
+        }
+        // appartient a la region 2
+        else if (X_enfant >X_parent &&Y_enfant < Y_parent ) {
+            if (this.Ne !=null){
+                return this.getNe().searchQTree(point_enfant);
+
+            }else {
+                System.out.println("No");
+                return new Dual(this,"Ne");
+            }
+        }
+        // appartient a la region 3
+        else if (X_enfant> X_parent && Y_enfant > Y_parent) {
+            if (this.Se !=null){
+                return this.getSe().searchQTree(point_enfant);
+
+            }else {
+                System.out.println("No");
+                return new Dual(this,"Se");
+            }
+        }
+        // appartient a la region 4
+        else  if (X_enfant< X_parent && Y_enfant > Y_parent) {
+            if (this.So !=null){
+                return this.getSo().searchQTree(point_enfant);
+
+            }else {
+                System.out.println("No");
+                return new Dual(this,"So");
+            }
+        }
+        else {
+            throw new IllegalArgumentException("Region non trouvée: merci de mettre de traiter les cas ou deux points ne sont pas sur le meme axe en X ou Y");
+        }
+    }
+
+  
+    /*
+     * A partir d'un nombre de point
+     * creer le Qtree final avec tous les points
+     * Précondition: A != null
+     */
+    public void addQTree(Point p){
+        // Si le quadtree n'a pas de point deja placé alors
+        // il ne sert a rien de recherche sa region
+        Dual region_recherche = searchQTree(p);
+        if (region_recherche.region=="No"){
+            region_recherche.quad.No = new Quadtree(p);
+        }else if (region_recherche.region=="Ne"){
+            region_recherche.quad.Ne = new Quadtree(p);
+        }
+        else if (region_recherche.region=="Se"){
+            region_recherche.quad.Se = new Quadtree(p);
+        }else if (region_recherche.region=="So"){
+            region_recherche.quad.So = new Quadtree(p);
+        }else {
+            throw new IllegalArgumentException(" Erreur inconnue merci de prendre contact avec les programmeurs");
+        }
+
+    }
+/* 
+        Point p2 = this.getPoint();
+        if (this.is_empty()){
+            System.out.println("point recherche :"+ p.getX()+":"+p.getY());
+            System.out.println("region No,Ne,Se,So :"+  this.No+this.Ne +this.Se+this.So);
+
+            if (p.getX() < p2.getX() && p.getY() < p2.getY() && this.No == null) {
+                System.out.println("No");
+                this.No=new Quadtree(p);
+            }
+            // appartient a la region 2
+            else if (p.getX() > p2.getX() && p.getY() < p2.getY()&& this.Ne == null ) {
+                this.Ne=new Quadtree(p);
+
+            }
+            // appartient a la region 3
+            else if (p.getX() > p2.getX() && p.getY() > p2.getY()&& this.Se == null) {
+                this.Se=new Quadtree(p);
+
+            }
+           // appartient a la region 4
+            else  if (p.getX() < p2.getX() && p.getY() > p2.getY()&& this.So == null) {
+                this.So=new Quadtree(p);
+            }
+            else {
+                throw new IllegalArgumentException("Region non trouvée: merci de mettre de traiter les cas ou deux points ne sont pas sur le meme axe en X ou Y");
+            }
+        }else{
+            System.out.println("pas empty");
+
+            if (p.getX() < p2.getX() && p.getY() < p2.getY() && this.No !=null) {
+                this.getNo().addQTree( p);
+                 System.out.println("région 1");
+
+            }
+            // appartient a la region 2
+            else if (p.getX() > p2.getX() && p.getY() < p2.getY() && this.Ne!=null) {
+                this.getNe().addQTree( p);
+                 System.out.println("région 2");
+
+            }
+            // appartient a la region 3
+            else if (p.getX() > p2.getX() && p.getY() > p2.getY() && this.Se !=null) {
+                this.getSe().addQTree(p);
+                 System.out.println("région 3");
+
+            }
+            // appartient a la region 4
+            else  {
+                this.getSo().addQTree( p);
+                 System.out.println("région 4");
+
+            }
+        }
+    }
+    */
+
+
+    /*
+     *  construit le quadtree entier en utilisant les fonctions
+     *  précéedentes.
+     */
+    public void buildQTree(Point[] points){
+        for (Point point : points){
+            this.addQTree(point);
+        }
+    }
+
+
+    
+
+    public void toImageEncaps(String filename,Image img,int Xmin, int Ymin, int Xmax, int Ymax){
+
+        if (this == null){
+            return;
+        }else { 
+            img.setRectangle(Xmin, Ymin, this.getPoint().getX(), this.getPoint().getY(), getColorNo());
+            img.setRectangle( this.getPoint().getX(),Ymin,Xmax, this.getPoint().getY(), getColorNe());
+            img.setRectangle(this.point.getX(),this.point.getY(), Xmax, Ymax, getColorSe());
+            img.setRectangle(Xmin,this.point.getY(),this.getPoint().getX(), Ymax, getColorSo());
+           
+                if (this.No != null){
+                    System.out.println("NO");
+            
+
+                    this.No.toImageEncaps(filename, img, Xmin, Ymin, this.getPoint().getX(), this.getPoint().getY());
+                }
+
+                if (this.Ne != null){
+                    System.out.println("Ne");
+            
+                    this.Ne.toImageEncaps(filename, img, this.getPoint().getX(), Ymin, Xmax, this.getPoint().getY());
+                }
+
+                if (this.Se != null){
+                    System.out.println("sE");
+
+
+                    this.Se.toImageEncaps(filename, img, this.getPoint().getX(), this.getPoint().getY(), Xmax, Ymax);
+                } 
+
+                if (this.So != null){
+                    System.out.println("sO");
+  
+
+                    this.So.toImageEncaps(filename, img, Xmin, this.getPoint().getY(), this.getPoint().getX(), Ymax);
+                }
+          
+        }
+ 
+    }
+    /*
+     * Génère une image a partir du quadtree
+     * Attention 0,0 = haut gauche
+     */
+    public void toImage(String filename,Image img){
+      
+
+      toImageEncaps(filename, img, 0, 0, img.width(), img.height());  
+            
+    }
+
+  
     /*
      * Donne une représentation textuel de notre 
      * Parcours symétrique
@@ -438,8 +417,8 @@ public class Quadtree {
         // appelle search colors
         // modifie la colors
 
-        //Quadtree region = searchQuadTree(this,p);
-        //region.getPoint().setColors(colors);
+        Dual dual = this.searchQTree(p);
+        dual.quad.getPoint().setColors(colors);
     }
 
 
@@ -484,22 +463,20 @@ public class Quadtree {
             if (quadtree_test == null && this ==null){
                 return true;
             }
-            //----
             if (quadtree_test == null && this !=null){
                 return false;
             }
-            //----
 
             if (quadtree_test != null && this ==null){
                 return false;
             }
             if (!(quadtree_test.getPoint().equals(this.getPoint()))){
-                System.out.print("vrai");
+                System.out.print("si");
 
                 return false;
             }else {
-                System.out.print("faux");
-                if ( this.getNo()!=null &&this.getNo()!=null){
+                System.out.print("sinon");
+                if ( this.getNo()!=null){
                     System.out.print("NO");
                     if (!this.getNo().equals(quadtree_test.getNo())|| (this.getNo()==null)){
 

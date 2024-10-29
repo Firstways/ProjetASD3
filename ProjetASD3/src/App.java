@@ -1,5 +1,8 @@
+import static org.junit.Assert.assertTrue;
+
 import java.awt.Color;
 
+import Projet.Dual;
 import Projet.Image;
 import Projet.Point;
 import Projet.Quadtree;
@@ -39,12 +42,36 @@ Les armuments sont :
         // col = Color.BLUE;
         // img.setRectangle(100, 100, 200, 200,col );
         // img.save("square");
+        Color[] colors_region = { Color.RED, Color.GREEN, Color.BLUE, Color.GRAY};
+        Point p1 = new Point(500,500,colors_region);
+        Point p2 = new Point(250,750,colors_region);
+        Point p3 = new Point(400,700,colors_region);
+        Point p4 = new Point(450,450,colors_region);
 
-    
+        Point[] points = {p2,p3,p4};
+
+        Quadtree quad_test = new Quadtree(null,null,null,null,p1);
+        quad_test.buildQTree(points);
 
 
 
-        Color[] colors_region1 = { Color.RED, Color.GREEN, Color.BLUE, Color.GRAY};
+        Quadtree se  = new Quadtree(null,null,null,null,p4);
+
+        Quadtree ne = new Quadtree(null,null,null,null,p3);
+
+
+        Quadtree so  = new Quadtree(null,ne,null,null,p2);
+
+        Quadtree quad_to_test = new Quadtree(null,null,so,null,p1);
+
+   
+
+
+    }
+}
+
+/*
+       Color[] colors_region1 = { Color.RED, Color.GREEN, Color.BLUE, Color.GRAY};
         Color[] colors_region2 = { Color.YELLOW, Color.PINK, Color.ORANGE, Color.CYAN};
         Color[] colors_region3 = { Color.LIGHT_GRAY, Color.MAGENTA, Color.WHITE, Color.BLACK};
 
@@ -78,5 +105,4 @@ Les armuments sont :
             e.printStackTrace();
         }
     
-    }
-}
+ */
