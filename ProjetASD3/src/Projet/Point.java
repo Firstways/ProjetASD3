@@ -34,26 +34,10 @@ public class Point {
     public Color[] getColors(){
         return this.colors;
     }
-    public void setColors(Color color,String region){
-        if (region == "No"){
-             this.colors[0]= color;
-        }else if (region == "Ne"){
-             this.colors[1]= color;
-
-        }else if (region == "Se"){
-             this.colors[2]= color;
-
-        }else if (region == "So"){
-             this.colors[3]= color;
-        }
-        else {
-             throw new IllegalArgumentException("Region: No, Ne, Se,So");
-        }
+    public void setColor(Color color,int region){
+        colors[region]=color;
     }
 
-    public void setColors(Color[] colors){
-        this.colors=colors;
-    }
 
 
     public boolean equals(Point point_recherche){

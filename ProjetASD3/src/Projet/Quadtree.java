@@ -142,6 +142,12 @@ public class Quadtree {
          * Si le quad à 4 feuilles vide je retourne le pointeur
          * Sinon je descend
          */
+
+         /*
+          * 
+          il faut ajouter le cas ou on souhaite recherche un point 
+          qui n'est pas intermédiaire.
+          */
         Point point_parent = this.getPoint();
         
         int X_parent = point_parent.getX();
@@ -154,8 +160,13 @@ public class Quadtree {
    
            
         if (X_enfant <X_parent && Y_enfant < Y_parent) {
+        
             if (this.No !=null){
+                if (this.No.getPoint().equals(point_enfant)){
+                    return new Dual(this,"No");
+                }else{
                 return this.getNo().searchQTree(point_enfant);
+                }
 
             }else {
                 System.out.println("No");
@@ -166,8 +177,11 @@ public class Quadtree {
         // appartient a la region 2
         else if (X_enfant >X_parent &&Y_enfant < Y_parent ) {
             if (this.Ne !=null){
+                if (this.Ne.getPoint().equals(point_enfant)){
+                    return new Dual(this,"Ne");
+                }else{
                 return this.getNe().searchQTree(point_enfant);
-
+                }
             }else {
                 System.out.println("No");
                 return new Dual(this,"Ne");
@@ -176,8 +190,11 @@ public class Quadtree {
         // appartient a la region 3
         else if (X_enfant> X_parent && Y_enfant > Y_parent) {
             if (this.Se !=null){
+                if (this.Se.getPoint().equals(point_enfant)){
+                    return new Dual(this,"Se");
+                }else{
                 return this.getSe().searchQTree(point_enfant);
-
+                }
             }else {
                 System.out.println("No");
                 return new Dual(this,"Se");
@@ -186,10 +203,13 @@ public class Quadtree {
         // appartient a la region 4
         else  if (X_enfant< X_parent && Y_enfant > Y_parent) {
             if (this.So !=null){
+                if (this.So.getPoint().equals(point_enfant)){
+                    return new Dual(this,"So");
+                }else{
                 return this.getSo().searchQTree(point_enfant);
-
+                }
             }else {
-                System.out.println("No");
+                System.out.println("So");
                 return new Dual(this,"So");
             }
         }
@@ -303,32 +323,32 @@ public class Quadtree {
             img.setRectangle(this.point.getX(),this.point.getY(), Xmax, Ymax, getColorSe());
             img.setRectangle(Xmin,this.point.getY(),this.getPoint().getX(), Ymax, getColorSo());
            
-                if (this.No != null){
-                    System.out.println("NO");
-            
+            if (this.No != null){
+                System.out.println("NO");
+        
 
-                    this.No.toImageEncaps(filename, img, Xmin, Ymin, this.getPoint().getX(), this.getPoint().getY());
-                }
+                this.No.toImageEncaps(filename, img, Xmin, Ymin, this.getPoint().getX(), this.getPoint().getY());
+            }
 
-                if (this.Ne != null){
-                    System.out.println("Ne");
-            
-                    this.Ne.toImageEncaps(filename, img, this.getPoint().getX(), Ymin, Xmax, this.getPoint().getY());
-                }
+            if (this.Ne != null){
+                System.out.println("Ne");
+        
+                this.Ne.toImageEncaps(filename, img, this.getPoint().getX(), Ymin, Xmax, this.getPoint().getY());
+            }
 
-                if (this.Se != null){
-                    System.out.println("sE");
+            if (this.Se != null){
+                System.out.println("sE");
 
 
-                    this.Se.toImageEncaps(filename, img, this.getPoint().getX(), this.getPoint().getY(), Xmax, Ymax);
-                } 
+                this.Se.toImageEncaps(filename, img, this.getPoint().getX(), this.getPoint().getY(), Xmax, Ymax);
+            } 
 
-                if (this.So != null){
-                    System.out.println("sO");
-  
+            if (this.So != null){
+                System.out.println("sO");
 
-                    this.So.toImageEncaps(filename, img, Xmin, this.getPoint().getY(), this.getPoint().getX(), Ymax);
-                }
+
+                this.So.toImageEncaps(filename, img, Xmin, this.getPoint().getY(), this.getPoint().getX(), Ymax);
+            }
           
         }
  
@@ -412,13 +432,30 @@ public class Quadtree {
      * Prend un point et une couleur en entrée utilisateur
      * Change la couleur de la région dans lequel le point 
      * se trouve 
+     * 
+     * Précondition: le point n'appartient pas au QuadTree
      */
-    public void reColor(Point p, Color[] colors){
+    public void reColor(Point p, Color color){
         // appelle search colors
         // modifie la colors
 
-        Dual dual = this.searchQTree(p);
-        dual.quad.getPoint().setColors(colors);
+        Dual dual = searchQTree(p);
+        if (dual.region=="No"){
+            this.getPoint().setColor(color,0);
+        }else if (dual.region=="Ne"){
+            this.getPoint().setColor(color,1);
+
+        }
+        else if (dual.region=="Se"){
+            this.getPoint().setColor(color,2);
+
+        }else if (dual.region=="So"){
+            this.getPoint().setColor(color,3);
+
+        }else {
+            throw new IllegalArgumentException(" Erreur inconnue merci de prendre contact avec les programmeurs");
+        }
+        compressQTree(dual.quad.getPoint());
     }
 
 
@@ -426,37 +463,46 @@ public class Quadtree {
      * Regarde si à un point donnée, les 4 régions voisines 
      * sont de la meme couleur
      * Si c'No le cas: retourne UNE region de la meme couleur
+     * 
+     * Précondition : le point appartient au quad tree
      */
     public void compressQTree(Point p){
-        
+        Dual dual = searchQTree(p);
         Point p2 = this.getPoint();
-        if (this.is_empty){
-            if ((this.getColorNo()==this.getColorNe())&&(this.getColorSe()==this.getColorSo())&&(this.getColorNo()==this.getColorSe())){
-                this.No = null;
-                this.So = null;
-
-                this.Se = null;
-
-                this.So = null;
-
+        if (dual.region=="No"){
+            if (dual.quad.is_empty()){
+                if ((dual.quad.getColorNo()==dual.quad.getColorNe())&&(dual.quad.getColorSe()==dual.quad.getColorSo())&&(dual.quad.getColorNo()==dual.quad.getColorSe())){
+                    dual.quad.No= null;
+                }
             }
-        }else{
-            if (this.No != null){
-                this.getNo().compressQTree(p);
-            }
-            if (this.Ne != null){
-                this.getNe().compressQTree(p);
-            }
-            if (this.Se != null){
-                this.getSe().compressQTree(p);
-            }
-            if (this.So != null){
-                this.getSo().compressQTree(p);
-            }
+           
         }
-    
+        else if (dual.region=="Ne"){
+            if (dual.quad.is_empty()){
+                if ((dual.quad.getColorNo()==dual.quad.getColorNe())&&(dual.quad.getColorSe()==dual.quad.getColorSo())&&(dual.quad.getColorNo()==dual.quad.getColorSe())){
+                    dual.quad.Ne= null;
+                }
+            }
+           
+        }else if (dual.region=="Se"){
+            if (dual.quad.is_empty()){
+                if ((dual.quad.getColorNo()==dual.quad.getColorNe())&&(dual.quad.getColorSe()==dual.quad.getColorSo())&&(dual.quad.getColorNo()==dual.quad.getColorSe())){
+                    dual.quad.Se= null;
+                }
+            }
+        }else if (dual.region=="So"){
+            if (dual.quad.is_empty()){
+                if ((dual.quad.getColorNo()==dual.quad.getColorNe())&&(dual.quad.getColorSe()==dual.quad.getColorSo())&&(dual.quad.getColorNo()==dual.quad.getColorSe())){
+                    dual.quad.So= null;
+                }
+            }
+           
+        }else {
+            throw new IllegalArgumentException(" Erreur inconnue merci de prendre contact avec les programmeurs");
+        }
 
     }
+
 
 
     public boolean equals(Quadtree quadtree_test){

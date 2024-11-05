@@ -1,9 +1,8 @@
 package Test;
 import static org.junit.Assert.*;
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import  Projet.*;
 
@@ -241,5 +240,23 @@ public class TestQuadTree {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Test
+     public void test_compressQtree_true_no(){
+        Color[] colors_region1 = { Color.RED, Color.GREEN, Color.BLUE, Color.GRAY};
+        Color[] colors_region2 = { Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN};
+
+        Point p1 = new Point(500,500,colors_region1);
+        Point p2 = new Point(250,250,colors_region2);
+        Quadtree quad_to_test = new Quadtree(p1);
+        quad_to_test.addQTree(p2);
+
+        quad_to_test.compressQTree(p2);
+
+        Quadtree quad = new Quadtree(p1);
+
+        assertTrue(quad.equals(quad_to_test));
     }
 }
