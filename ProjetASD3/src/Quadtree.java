@@ -153,7 +153,8 @@ public class Quadtree {
         int X_enfant = point_enfant.getX();
         int Y_enfant = point_enfant.getY();;
     
-           
+        System.out.println("Coordonnées du point parent : (" + X_parent + ", " + Y_parent + ")");
+        System.out.println("Coordonnées du point enfant : (" + X_enfant + ", " + Y_enfant + ")");
         if (X_enfant <=X_parent && Y_enfant < Y_parent) {
         
             if (this.No !=null){
@@ -244,8 +245,9 @@ public class Quadtree {
      *  précéedentes.
      */
     public void buildQTree(Point[] points){
-        for (Point point : points){
-            this.addQTree(point);
+        for (int k = 1 ; k < points.length;k++){
+            System.out.println("Point" + k );
+            this.addQTree(points[k]);
         }
     }
 
