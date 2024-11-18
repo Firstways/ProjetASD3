@@ -54,7 +54,7 @@ Les armuments sont :
             }
 
             Image img = new Image(image_size, image_size);
-            quad.toImage("square", img);
+            quad.toImage("square", img, border_size);
             try {
                 img.save("square");
     

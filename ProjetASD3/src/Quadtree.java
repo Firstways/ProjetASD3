@@ -252,7 +252,37 @@ public class Quadtree {
     }
 
 
+    public void printBorder(Image img, int border){
+        if (this == null){
+            return;
+        }else { 
+
+            img.setRectangle(this.getPoint().getX(), this.getPoint().getY(),this.getPoint().getX(), this.getPoint().getY(),Color.BLACK);
+            //img.setRectangle(borderXmax,borderYmax,borderXmin,borderYmin,Color.BLACK);
+
+            if (this.No != null){
+                System.out.println("NO");
+                this.No.printBorder(img,border);
+            }
+
+            if (this.Ne != null){
+                System.out.println("Ne");
+                this.Ne.printBorder(img,border);
+            }
+
+            if (this.Se != null){
+                System.out.println("sE");
+                this.Se.printBorder(img,border);
+            } 
+
+            if (this.So != null){
+                System.out.println("sO");
+                this.So.printBorder(img,border);
+            }
+          
+        }
     
+    }
 
     public void toImageEncaps(String filename,Image img,int Xmin, int Ymin, int Xmax, int Ymax){
         if (this == null){
@@ -262,6 +292,7 @@ public class Quadtree {
             img.setRectangle( this.getPoint().getX(),Ymin,Xmax, this.getPoint().getY(), getColorNe());
             img.setRectangle(this.point.getX(),this.point.getY(), Xmax, Ymax, getColorSe());
             img.setRectangle(Xmin,this.point.getY(),this.getPoint().getX(), Ymax, getColorSo());
+
            
             if (this.No != null){
                 System.out.println("NO");
@@ -284,14 +315,16 @@ public class Quadtree {
             }
           
         }
+    
  
     }
     /*
      * Génère une image a partir du quadtree
      * Attention 0,0 = haut gauche
      */
-    public void toImage(String filename,Image img){
-      toImageEncaps(filename, img, 0, 0, img.width(), img.height());  
+    public void toImage(String filename,Image img,int border){
+      toImageEncaps(filename, img, 0, 0, img.width(), img.height()); 
+      printBorder(img ,border); 
     }
 
   
