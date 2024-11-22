@@ -39,6 +39,9 @@ public class MyFile {
         if (s.equals("B")){
             return Color.BLUE;
         }
+        if (s.equals("N")){
+            return Color.BLACK;
+        }
         else{
             return Color.GRAY;
         }
@@ -83,14 +86,13 @@ public class MyFile {
                 Color c3 = parseColor(pointData[4]);
 
                 Color c4 = parseColor(pointData[5]);
-                Color[] c = new Color[]{c1, c2, c3, c4};
+                Color[] c = {c1, c2, c3, c4};
                 points[i-2] = new Point(x,y,c);
             }
 
-                        // Lecture de la taille de la bordure
+            // Lecture de la taille de la bordure
             borderSize = (Integer.parseInt(fileLine.get(2+nbPoints)));
 
-            // Lecture du nombre de couleurs
             nbRecolor = (Integer.parseInt(fileLine.get(3+nbPoints)));
             initRecolor(nbRecolor);
             for (int i = 0; i < nbRecolor; i++) {
@@ -116,10 +118,6 @@ public class MyFile {
            
         }
     }
-
-
-
-
 
 
 }
