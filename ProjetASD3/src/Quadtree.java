@@ -63,23 +63,15 @@ public class Quadtree {
 
     public String colorIdentifier(Color color ){
         if (color.equals(Color.RED)) {
-            return "ROUGE";
+            return "R";
         } else if (color.equals(Color.BLUE)) {
-            return "BLEU";
-        } else if (color.equals(Color.GREEN)) {
-            return "VERT";
+            return "B";
         } else if (color.equals(Color.YELLOW)) {
-            return "JAUNE";
-        } else if (color.equals(Color.CYAN)) {
-            return "CYAN";
-        } else if (color.equals(Color.MAGENTA)) {
-            return "MAGENTA";
+            return "J";
         } else if (color.equals(Color.GRAY)) {
-            return "GRIS";
-        } else if (color.equals(Color.PINK)) {
-            return "ROSE";
-        } else if (color.equals(Color.ORANGE)) {
-            return "ORANGE";
+            return "G";
+        } else if (color.equals(Color.BLACK)) {
+            return "B";
         } else {
             return "INCONNU";
         }
@@ -145,13 +137,23 @@ public class Quadtree {
           il faut ajouter le cas ou on souhaite recherche un point 
           qui n'est pas intermédiaire.
           */
+        // Point point_parent = this.getPoint();
+        
+        // int X_parent = point_parent.getX();
+        // int Y_parent= point_parent.getY();
+
+        // int X_enfant = point_enfant.getX();
+        // int Y_enfant = point_enfant.getY();;
+
         Point point_parent = this.getPoint();
         
         int X_parent = point_parent.getX();
         int Y_parent= point_parent.getY();
 
+
         int X_enfant = point_enfant.getX();
-        int Y_enfant = point_enfant.getY();;
+        int Y_enfant = point_enfant.getY();
+
     
         System.out.println("Coordonnées du point parent : (" + X_parent + ", " + Y_parent + ")");
         System.out.println("Coordonnées du point enfant : (" + X_enfant + ", " + Y_enfant + ")");
@@ -159,14 +161,14 @@ public class Quadtree {
         
             if (this.No !=null){
                 if (this.No.getPoint().equals(point_enfant)){
-                    return new Dual(this,"So");
+                    return new Dual(this,"No");
                 }else{
                 return this.getNo().searchQTree(point_enfant);
                 }
 
             }else {
-                System.out.println("So");
-                return new Dual(this,"So");
+                System.out.println("No");
+                return new Dual(this,"No");
             }
             
         }
@@ -174,39 +176,39 @@ public class Quadtree {
         else if (X_enfant >X_parent &&Y_enfant < Y_parent ) {
             if (this.Ne !=null){
                 if (this.Ne.getPoint().equals(point_enfant)){
-                    return new Dual(this,"Se");
-                }else{
-                return this.getNe().searchQTree(point_enfant);
-                }
-            }else {
-                System.out.println("Se");
-                return new Dual(this,"Se");
-            }
-        }
-        // appartient a la region 3
-        else if (X_enfant> X_parent && Y_enfant > Y_parent) {
-            if (this.Se !=null){
-                if (this.Se.getPoint().equals(point_enfant)){
                     return new Dual(this,"Ne");
                 }else{
-                return this.getSe().searchQTree(point_enfant);
+                return this.getNe().searchQTree(point_enfant);
                 }
             }else {
                 System.out.println("Ne");
                 return new Dual(this,"Ne");
             }
         }
+        // appartient a la region 3
+        else if (X_enfant> X_parent && Y_enfant > Y_parent) {
+            if (this.Se !=null){
+                if (this.Se.getPoint().equals(point_enfant)){
+                    return new Dual(this,"Se");
+                }else{
+                return this.getSe().searchQTree(point_enfant);
+                }
+            }else {
+                System.out.println("Se");
+                return new Dual(this,"Se");
+            }
+        }
         // appartient a la region 4
         else  if (X_enfant< X_parent && Y_enfant > Y_parent) {
             if (this.So !=null){
                 if (this.So.getPoint().equals(point_enfant)){
-                    return new Dual(this,"No");
+                    return new Dual(this,"So");
                 }else{
                 return this.getSo().searchQTree(point_enfant);
                 }
             }else {
-                System.out.println("No");
-                return new Dual(this,"No");
+                System.out.println("So");
+                return new Dual(this,"So");
             }
         }
         else {
@@ -251,8 +253,85 @@ public class Quadtree {
         }
     }
 
+    public void printBorderHorizontal(Image img, int border,int Xmin,int Ymin, int Xmax, int Ymax){
+        System.out.println(Xmin);
+        System.out.println(Ymin);
 
+        System.out.println(Xmax+border);
+        System.out.println(Ymax);
+
+        System.out.println("quad X " +this.getPoint().getX());
+        System.out.println("quad Y "+this.getPoint().getY());
+
+        img.setRectangle(Xmin,Ymin,Xmax,Ymax+border,Color.BLACK);
+
+        if (this.No != null){
+            System.out.println("NO");
+            this.No.printBorderHorizontal(img,border,Xmin,this.No.getPoint().getY(),this.getPoint().getX(),this.No.getPoint().getY());
+
+            
+        }
+        if (this.So != null){
+            System.out.println("sO");
+            this.So.printBorderHorizontal(img,border,Xmin, this.So.getPoint().getY(),this.getPoint().getX(),this.So.getPoint().getY() );
+
+        }
+
+        if (this.Ne != null){
+            System.out.println("Ne");
+            this.Ne.printBorderHorizontal(img,border, this.getPoint().getX(), this.Ne.getPoint().getY(),Xmax,this.Ne.getPoint().getY() );
+
+
+        }
+
+        if (this.Se != null){
+            System.out.println("sE");
+            this.Se.printBorderHorizontal(img,border, this.getPoint().getX(), this.Se.getPoint().getY(),Xmax,this.Se.getPoint().getY());
+
+        } 
+
+    }
+
+    public void printBorderVertical(Image img, int border,int Xmin,int Ymin, int Xmax, int Ymax){
+        if (this == null){
+            return;
+        }else { 
+
+
+            img.setRectangle(Xmin,Ymin,Xmax+border,Ymax,Color.BLACK);
+
+
+
+            if (this.No != null){
+                System.out.println("NO");
+                this.No.printBorderVertical(img,border,this.No.getPoint().getX(), Ymin,this.No.getPoint().getX(),this.getPoint().getY()  );
+
+                
+            }
+            if (this.So != null){
+                System.out.println("sO");
+                this.So.printBorderVertical(img,border,this.So.getPoint().getX(), this.getPoint().getY(),this.So.getPoint().getX(),Ymax );
+
+            }
+
+            if (this.Ne != null){
+                System.out.println("Ne");
+                this.Ne.printBorderVertical(img,border, this.Ne.getPoint().getX(),Ymin,this.Ne.getPoint().getX(),this.getPoint().getY() );
+
+
+            }
+
+            if (this.Se != null){
+                System.out.println("sE");
+                this.Se.printBorderVertical(img,border,this.Se.getPoint().getX(),this.getPoint().getY(),this.Se.getPoint().getX(),Ymax);
+
+            } 
+
+
+          
+        }
     
+    }
 
     public void toImageEncaps(String filename,Image img,int Xmin, int Ymin, int Xmax, int Ymax){
         if (this == null){
@@ -262,36 +341,41 @@ public class Quadtree {
             img.setRectangle( this.getPoint().getX(),Ymin,Xmax, this.getPoint().getY(), getColorNe());
             img.setRectangle(this.point.getX(),this.point.getY(), Xmax, Ymax, getColorSe());
             img.setRectangle(Xmin,this.point.getY(),this.getPoint().getX(), Ymax, getColorSo());
+
            
             if (this.No != null){
-                System.out.println("NO");
+                System.out.println("no");
                 this.No.toImageEncaps(filename, img, Xmin, Ymin, this.getPoint().getX(), this.getPoint().getY());
             }
 
             if (this.Ne != null){
-                System.out.println("Ne");
+                System.out.println("ne");
                 this.Ne.toImageEncaps(filename, img, this.getPoint().getX(), Ymin, Xmax, this.getPoint().getY());
             }
 
             if (this.Se != null){
-                System.out.println("sE");
+                System.out.println("se");
                 this.Se.toImageEncaps(filename, img, this.getPoint().getX(), this.getPoint().getY(), Xmax, Ymax);
             } 
 
             if (this.So != null){
-                System.out.println("sO");
+                System.out.println("so");
                 this.So.toImageEncaps(filename, img, Xmin, this.getPoint().getY(), this.getPoint().getX(), Ymax);
             }
           
         }
+    
  
     }
     /*
      * Génère une image a partir du quadtree
      * Attention 0,0 = haut gauche
      */
-    public void toImage(String filename,Image img){
-      toImageEncaps(filename, img, 0, 0, img.width(), img.height());  
+    public void toImage(String filename,Image img,int border){
+      toImageEncaps(filename, img, 0, 0, img.width(), img.height()); 
+      printBorderVertical(img ,border,this.getPoint().getX(),0,this.getPoint().getX(), img.width()); 
+      printBorderHorizontal(img ,border,0,this.getPoint().getY(),img.width(),this.getPoint().getY()); 
+
     }
 
   
@@ -299,63 +383,55 @@ public class Quadtree {
      * Donne une représentation textuel de notre 
      * Parcours symétrique
      */
-    public void toText(){
+    public String toText(){
         /*
             * Si c'est une feuille j'écris la couleur
             * Sinon j'ouvre une parenthèse et je descends de 1
             */
-            
+        String s1 ="";
         if (this.getNo()==null){
-            System.out.print(this.getColorNoString());
-            System.out.print(",");
+            s1 +=this.getColorNoString();
 
+        } else {
+            s1+="(";
+            s1+=this.getNo().toText();
+            s1+=")";
         }
         if (this.getNe()==null){
-            System.out.print(this.getColorNeString());
-            System.out.print(",");
+            s1 +=this.getColorNeString();
+
+        }else {
+            s1+="(";
+            s1+=this.getNe().toText();
+            s1+=")";
 
         }
 
         if (this.getSe()==null){
-            System.out.print(this.getColorSeString());
-            System.out.print(",");
+            s1 +=this.getColorSeString();
 
+        }else {
+            s1+="(";            
+
+            s1+=this.getSe().toText();
+            s1+=")";
         }
         if (this.getSo()==null){
-            System.out.print(this.getColorSoString());
-            System.out.print(",");
+            s1 +=this.getColorSoString();
 
+        }else{
+            s1+="(";
+
+            s1+=this.getSo().toText();
+            s1+=")";
         }
 
-        if (this.getNo()!=null){
-            System.out.print("(");
-            this.getNo().toText();
-            System.out.print(")");
 
-        }
-        if (this.getNe()!=null){
-            System.out.print("(");
+        System.out.println(s1);
 
-            this.getNe().toText();
-            System.out.print(")");
-
-        }
-        if (this.getSe()!=null){
-            System.out.print("(");
-            
-
-            this.getSe().toText();
-            System.out.print(")");
-
-        }
-        if (this.getSo()!=null){
-            System.out.print("(");
-
-            this.getSo().toText();
-            System.out.print(")");
-
-        }
+        return s1;
     }
+
 
     /*
      * Prend un point et une couleur en entrée utilisateur
