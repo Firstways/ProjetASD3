@@ -47,7 +47,13 @@ public class MyFile {
         }
     }
 
-    public Point[] getPoints(){return points;}
+    public Point[] getPoints(){
+        int width = getImageSize();
+        for (Point p : points){
+            p.setY(width-p.getY());
+        }
+        return points;
+    }
     public int getBorderSize(){return borderSize;}
     public int getImageSize(){return windowSize;}
     public Point[] getRecolors(){return reColor;}

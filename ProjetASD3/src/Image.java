@@ -67,5 +67,12 @@ public class Image
   public int height() {
     return image.getHeight();
   }
+
+  public void revert_pixel(String filename){
+    filename+="tmp";
+    File fic = new File(filename);
+    fic = new File(fic.getAbsolutePath());
+
+  }
 }
 

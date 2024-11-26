@@ -63,23 +63,15 @@ public class Quadtree {
 
     public String colorIdentifier(Color color ){
         if (color.equals(Color.RED)) {
-            return "ROUGE";
+            return "R";
         } else if (color.equals(Color.BLUE)) {
-            return "BLEU";
-        } else if (color.equals(Color.GREEN)) {
-            return "VERT";
+            return "B";
         } else if (color.equals(Color.YELLOW)) {
-            return "JAUNE";
-        } else if (color.equals(Color.CYAN)) {
-            return "CYAN";
-        } else if (color.equals(Color.MAGENTA)) {
-            return "MAGENTA";
+            return "J";
         } else if (color.equals(Color.GRAY)) {
-            return "GRIS";
-        } else if (color.equals(Color.PINK)) {
-            return "ROSE";
-        } else if (color.equals(Color.ORANGE)) {
-            return "ORANGE";
+            return "G";
+        } else if (color.equals(Color.BLACK)) {
+            return "B";
         } else {
             return "INCONNU";
         }
@@ -145,13 +137,23 @@ public class Quadtree {
           il faut ajouter le cas ou on souhaite recherche un point 
           qui n'est pas intermédiaire.
           */
+        // Point point_parent = this.getPoint();
+        
+        // int X_parent = point_parent.getX();
+        // int Y_parent= point_parent.getY();
+
+        // int X_enfant = point_enfant.getX();
+        // int Y_enfant = point_enfant.getY();;
+
         Point point_parent = this.getPoint();
         
         int X_parent = point_parent.getX();
         int Y_parent= point_parent.getY();
 
+
         int X_enfant = point_enfant.getX();
-        int Y_enfant = point_enfant.getY();;
+        int Y_enfant = point_enfant.getY();
+
     
         System.out.println("Coordonnées du point parent : (" + X_parent + ", " + Y_parent + ")");
         System.out.println("Coordonnées du point enfant : (" + X_enfant + ", " + Y_enfant + ")");
@@ -386,47 +388,50 @@ public class Quadtree {
             * Si c'est une feuille j'écris la couleur
             * Sinon j'ouvre une parenthèse et je descends de 1
             */
-        if (this.is_empty()){
-            String s ="";
-            
-                s+= this.getColorNoString()+",";
+        String s1 ="";
+        if (this.getNo()==null){
+            s1 +=this.getColorNoString();
 
-            
-                s+= this.getColorNeString()+",";
-
-
-                s+= this.getColorSeString()+",";
-
-                s+=(this.getColorSoString())+",";
-                
-                return s;
-
-            
-        }else {
-            String s ="";
-
-            if (this.getNo()!=null){
-                s+= "("+this.getNo().toText()+")";
-            }
-            if (this.getNe()!=null){
-
-                s+= "("+this.getNe().toText()+")";
-
-            }
-            if (this.getSe()!=null){
-                
-
-                s+= "("+this.getSe().toText()+")";
-
-            }
-            if (this.getSo()!=null){
-
-                s+= "("+this.getSo().toText()+")";
-
-            }
-        return s;
+        } else {
+            s1+="(";
+            s1+=this.getNo().toText();
+            s1+=")";
         }
+        if (this.getNe()==null){
+            s1 +=this.getColorNeString();
+
+        }else {
+            s1+="(";
+            s1+=this.getNe().toText();
+            s1+=")";
+
+        }
+
+        if (this.getSe()==null){
+            s1 +=this.getColorSeString();
+
+        }else {
+            s1+="(";            
+
+            s1+=this.getSe().toText();
+            s1+=")";
+        }
+        if (this.getSo()==null){
+            s1 +=this.getColorSoString();
+
+        }else{
+            s1+="(";
+
+            s1+=this.getSo().toText();
+            s1+=")";
+        }
+
+
+        System.out.println(s1);
+
+        return s1;
     }
+
 
     /*
      * Prend un point et une couleur en entrée utilisateur

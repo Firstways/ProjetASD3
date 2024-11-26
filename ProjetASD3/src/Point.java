@@ -39,6 +39,11 @@ public class Point {
         return this.y ;
     }
 
+
+    public void setY(int y){
+        this.y = y ;
+    }
+
     public Color[] getColors(){
         return this.colors;
     }

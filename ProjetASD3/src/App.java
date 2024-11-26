@@ -53,16 +53,13 @@ Les armuments sont :
             Quadtree quad = new Quadtree (point_add_to_quad[0]);
             quad.buildQTree(point_add_to_quad);
             System.out.println(point_add_to_quad.length);
-            // for (Point p : region_to_recolor){
-            //     quad.reColor(p,p.getColor());
-            // }
-            
+
             Image img = new Image(image_size, image_size);
-            quad.toImage(sortie+"/square", img, border_size);
+            quad.toImage(sortie+"/square_B", img, border_size);
             try {
-                img.save(sortie+"/square");
+                img.save(sortie+"boyenvalbelouinsquare");
                 FileWriter writer = new FileWriter(sortie+"boyenvalbelouin.txt");
-                String text_quad =quad.toText();
+                String text_quad ="("+quad.toText()+")";
                 writer.write(text_quad);
                 writer.close();
 
@@ -72,11 +69,28 @@ Les armuments sont :
                 e.printStackTrace();
             }
 
-            Image test = new Image(1000, 1000);
-            test.setRectangle(600, 0, 619, 1000, Color.GRAY);
-            test.setRectangle(850, 500, 869, 1000, Color.RED);
+            for (Point p : region_to_recolor){
+                quad.reColor(p,p.getColor());
+            }
+            img = new Image(image_size, image_size);
+            quad.toImage(sortie+"/square_R", img, border_size);
+            try {
+                img.save(sortie+"boyenvalbelouinsquare");
+                FileWriter writer = new FileWriter(sortie+"boyenvalbelouin.txt");
+                String text_quad ="("+quad.toText()+")";
+                writer.write(text_quad);
+                writer.close();
 
-            test.save("test");
+    
+    
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            for (Point p : region_to_recolor){
+                quad.reColor(p,p.getColor());
+            }
+
         }
            
     }
