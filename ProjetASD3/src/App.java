@@ -35,7 +35,7 @@ Les armuments sont :
             Point[] region_to_recolor = myFile.getRecolors();
             int border_size = myFile.getBorderSize();
 
-            System.out.print(image_size);
+            System.out.println(image_size);
             for (Point p : point_add_to_quad){
                 System.out.println("X : "+p.getX()+ " Y : "+p.getY());
                 
@@ -54,9 +54,45 @@ Les armuments sont :
             }
 
             Image img = new Image(image_size, image_size);
-            quad.toImage("square", img);
+            quad.toImage("square", img, 19);
             try {
                 img.save("square");
+    
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(strategie == 2){
+            MyFile myFile = new MyFile(entree);
+            myFile.readFile();
+            int image_size = myFile.getImageSize();
+            Point[] point_add_to_ternaire= myFile.getPoints();
+            Point[] region_to_recolor = myFile.getRecolors();
+            int border_size = myFile.getBorderSize();
+
+            System.out.println(image_size);
+            for (Point p : point_add_to_ternaire){
+                System.out.println("X : "+p.getX()+ " Y : "+p.getY());
+                
+            }
+
+            for (Point p : region_to_recolor){
+                System.out.println("X : "+p.getX()+ " Y : "+p.getY());
+                
+            }
+            System.out.print(border_size);
+
+            TernaireTree ternaire = new TernaireTree(point_add_to_ternaire[0]);
+            ternaire.buildTTree(point_add_to_ternaire);
+
+            for (Point p : region_to_recolor){
+                ternaire.reColor(p,p.getColor());
+            }
+
+            Image img = new Image(image_size, image_size);
+            ternaire.toImage("ternaire", img, 19);
+            try {
+                img.save("ternaire");
     
             } catch (Exception e) {
                 e.printStackTrace();
