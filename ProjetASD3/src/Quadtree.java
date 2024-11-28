@@ -1,10 +1,5 @@
 import java.awt.*;
-import java.io.*;
-import java.lang.reflect.Array;
-import java.util.*;
-import java.util.List;
 
-@SuppressWarnings("unused")
 
 public class Quadtree {
 
@@ -15,8 +10,7 @@ public class Quadtree {
     private Quadtree So ;
 
     private Point point;
-    private boolean is_empty;
-    private String region;
+
 
     /*
      * Un quadtree No un arbre dans laquelle chaque noeuds
@@ -30,10 +24,7 @@ public class Quadtree {
         this.Ne = ne ;
         this.So = so ;
         this.point = point;
-        if (this.is_empty()){
-            is_empty = true;
-        }
-        this.region = null;
+  
     }
     public Quadtree(Point point){
         this.No = null;
@@ -41,7 +32,6 @@ public class Quadtree {
         this.Ne = null;
         this.So = null ;
         this.point = point;
-        this.is_empty = true;
     
     }
 
@@ -71,7 +61,7 @@ public class Quadtree {
         } else if (color.equals(Color.GRAY)) {
             return "G";
         } else if (color.equals(Color.BLACK)) {
-            return "B";
+            return "N";
         } else {
             return "INCONNU";
         }
@@ -120,6 +110,11 @@ public class Quadtree {
      * Retourne la feuille à laquel le point appartient
      * Précondition quadtree!= null
      */
+
+     /*Complexité: 
+        Pire cas :O(h(Q)) 
+      */
+
     public Dual searchQTree(Point point_enfant){
         /*
          * Si le quad a 4 feuilles vide, je regarde à quelle region appartient le point
@@ -131,19 +126,6 @@ public class Quadtree {
          * Si le quad à 4 feuilles vide je retourne le pointeur
          * Sinon je descend
          */
-
-         /*
-          * 
-          il faut ajouter le cas ou on souhaite recherche un point 
-          qui n'est pas intermédiaire.
-          */
-        // Point point_parent = this.getPoint();
-        
-        // int X_parent = point_parent.getX();
-        // int Y_parent= point_parent.getY();
-
-        // int X_enfant = point_enfant.getX();
-        // int Y_enfant = point_enfant.getY();;
 
         Point point_parent = this.getPoint();
         
@@ -163,7 +145,7 @@ public class Quadtree {
                 if (this.No.getPoint().equals(point_enfant)){
                     return new Dual(this,"No");
                 }else{
-                return this.getNo().searchQTree(point_enfant);
+                    return this.getNo().searchQTree(point_enfant);
                 }
 
             }else {
@@ -178,7 +160,7 @@ public class Quadtree {
                 if (this.Ne.getPoint().equals(point_enfant)){
                     return new Dual(this,"Ne");
                 }else{
-                return this.getNe().searchQTree(point_enfant);
+                    return this.getNe().searchQTree(point_enfant);
                 }
             }else {
                 System.out.println("Ne");
@@ -191,7 +173,7 @@ public class Quadtree {
                 if (this.Se.getPoint().equals(point_enfant)){
                     return new Dual(this,"Se");
                 }else{
-                return this.getSe().searchQTree(point_enfant);
+                    return this.getSe().searchQTree(point_enfant);
                 }
             }else {
                 System.out.println("Se");
@@ -199,12 +181,12 @@ public class Quadtree {
             }
         }
         // appartient a la region 4
-        else  if (X_enfant< X_parent && Y_enfant > Y_parent) {
+        else  if (X_enfant<= X_parent && Y_enfant > Y_parent) {
             if (this.So !=null){
                 if (this.So.getPoint().equals(point_enfant)){
                     return new Dual(this,"So");
                 }else{
-                return this.getSo().searchQTree(point_enfant);
+                    return this.getSo().searchQTree(point_enfant);
                 }
             }else {
                 System.out.println("So");
@@ -221,7 +203,11 @@ public class Quadtree {
      * A partir d'un nombre de point
      * creer le Qtree final avec tous les points
      * Précondition: A != null
-     */
+     * 
+     /*Complexité: 
+        Pire cas :O(h(Q)) 
+      */
+
     public void addQTree(Point p){
         // Si le quadtree n'a pas de point deja placé alors
         // il ne sert a rien de recherche sa region
@@ -246,52 +232,63 @@ public class Quadtree {
      *  construit le quadtree entier en utilisant les fonctions
      *  précéedentes.
      */
+         /*Complexité: 
+        Pire cas :O(h(Q)*m) 
+        */
+
     public void buildQTree(Point[] points){
         for (int k = 1 ; k < points.length;k++){
-            System.out.println("Point" + k );
+            //System.out.println("Point" + k );
             this.addQTree(points[k]);
         }
     }
 
+          /*Complexité: 
+        Pire cas :O(n)
+        */
+
     public void printBorderHorizontal(Image img, int border,int Xmin,int Ymin, int Xmax, int Ymax){
-        System.out.println(Xmin);
-        System.out.println(Ymin);
+        // System.out.println(Xmin);
+        // System.out.println(Ymin);
 
-        System.out.println(Xmax+border);
-        System.out.println(Ymax);
+        // System.out.println(Xmax+border);
+        // System.out.println(Ymax);
 
-        System.out.println("quad X " +this.getPoint().getX());
-        System.out.println("quad Y "+this.getPoint().getY());
+        // System.out.println("quad X " +this.getPoint().getX());
+        // System.out.println("quad Y "+this.getPoint().getY());
 
         img.setRectangle(Xmin,Ymin,Xmax,Ymax+border,Color.BLACK);
 
         if (this.No != null){
-            System.out.println("NO");
+            //System.out.println("NO");
             this.No.printBorderHorizontal(img,border,Xmin,this.No.getPoint().getY(),this.getPoint().getX(),this.No.getPoint().getY());
 
             
         }
         if (this.So != null){
-            System.out.println("sO");
+            //System.out.println("sO");
             this.So.printBorderHorizontal(img,border,Xmin, this.So.getPoint().getY(),this.getPoint().getX(),this.So.getPoint().getY() );
 
         }
 
         if (this.Ne != null){
-            System.out.println("Ne");
+            //System.out.println("Ne");
             this.Ne.printBorderHorizontal(img,border, this.getPoint().getX(), this.Ne.getPoint().getY(),Xmax,this.Ne.getPoint().getY() );
 
 
         }
 
         if (this.Se != null){
-            System.out.println("sE");
+            //System.out.println("sE");
             this.Se.printBorderHorizontal(img,border, this.getPoint().getX(), this.Se.getPoint().getY(),Xmax,this.Se.getPoint().getY());
 
         } 
 
     }
 
+        /*Complexité: 
+        Pire cas :O(n)
+        */
     public void printBorderVertical(Image img, int border,int Xmin,int Ymin, int Xmax, int Ymax){
         if (this == null){
             return;
@@ -303,26 +300,26 @@ public class Quadtree {
 
 
             if (this.No != null){
-                System.out.println("NO");
+                //System.out.println("NO");
                 this.No.printBorderVertical(img,border,this.No.getPoint().getX(), Ymin,this.No.getPoint().getX(),this.getPoint().getY()  );
 
                 
             }
             if (this.So != null){
-                System.out.println("sO");
+                //System.out.println("sO");
                 this.So.printBorderVertical(img,border,this.So.getPoint().getX(), this.getPoint().getY(),this.So.getPoint().getX(),Ymax );
 
             }
 
             if (this.Ne != null){
-                System.out.println("Ne");
+                //System.out.println("Ne");
                 this.Ne.printBorderVertical(img,border, this.Ne.getPoint().getX(),Ymin,this.Ne.getPoint().getX(),this.getPoint().getY() );
 
 
             }
 
             if (this.Se != null){
-                System.out.println("sE");
+                //System.out.println("sE");
                 this.Se.printBorderVertical(img,border,this.Se.getPoint().getX(),this.getPoint().getY(),this.Se.getPoint().getX(),Ymax);
 
             } 
@@ -333,6 +330,10 @@ public class Quadtree {
     
     }
 
+       /*
+        Complexité: 
+        Pire cas :O(n)
+       */
     public void toImageEncaps(String filename,Image img,int Xmin, int Ymin, int Xmax, int Ymax){
         if (this == null){
             return;
@@ -371,6 +372,9 @@ public class Quadtree {
      * Génère une image a partir du quadtree
      * Attention 0,0 = haut gauche
      */
+    /*Complexité: 
+    Pire cas :O(n)
+    */
     public void toImage(String filename,Image img,int border){
       toImageEncaps(filename, img, 0, 0, img.width(), img.height()); 
       printBorderVertical(img ,border,this.getPoint().getX(),0,this.getPoint().getX(), img.width()); 
@@ -383,6 +387,9 @@ public class Quadtree {
      * Donne une représentation textuel de notre 
      * Parcours symétrique
      */
+    /*Complexité: 
+        Pire cas :O(n)
+    */
     public String toText(){
         /*
             * Si c'est une feuille j'écris la couleur
@@ -427,7 +434,6 @@ public class Quadtree {
         }
 
 
-        System.out.println(s1);
 
         return s1;
     }
@@ -440,22 +446,36 @@ public class Quadtree {
      * 
      * Précondition: le point n'appartient pas au QuadTree
      */
+
+    /*Complexité: 
+        Pire cas :O(h(Q)) 
+    */
     public void reColor(Point p, Color color){
         // appelle search colors
         // modifie la colors
         Dual dual = searchQTree(p);
+        System.out.print( "parent "+this.getPoint().toString());
+        System.out.println();
+        System.out.print("p : " +p.toString());
+        System.out.println();
+        System.out.print("la region est : "+dual.region+" "+ dual.quad.getPoint().toString());
+        System.out.println();
 
-        if (dual.region=="No"){
-            this.getPoint().setColor(color,0);
-        }else if (dual.region=="Ne"){
-            this.getPoint().setColor(color,1);
+        if (dual.region.equals("No")){
+            dual.quad.getPoint().setColor(color,0);
+
+        }else if (dual.region.equals("So")){
+            System.err.println("Recolor So");
+
+            dual.quad.getPoint().setColor(color,3);
 
         }
-        else if (dual.region=="Se"){
-            this.getPoint().setColor(color,2);
+        else if (dual.region.equals("Se")){
+            System.err.println("Se");
+            dual.quad.getPoint().setColor(color,2);
 
-        }else if (dual.region=="So"){
-            this.getPoint().setColor(color,3);
+        }else if (dual.region.equals("Ne")){
+            dual.quad.getPoint().setColor(color,1);
 
         }else {
             throw new IllegalArgumentException(" Erreur inconnue merci de prendre contact avec les programmeurs");
@@ -471,44 +491,53 @@ public class Quadtree {
      * 
      * Précondition : le point appartient au quad tree
      */
-    public void compressQTree(Dual dual){
-        Point p2 = this.getPoint();
-        if (dual.region=="No"){
-            if (dual.quad.is_empty()){
-                if ((dual.quad.getColorNo()==dual.quad.getColorNe())&&(dual.quad.getColorSe()==dual.quad.getColorSo())&&(dual.quad.getColorNo()==dual.quad.getColorSe())){
-                    dual.quad.No= null;
+    /*Complexité: 
+        Pire cas :O(1) 
+    */
+    public void compressQTree(Dual dual) {
+        
+        if ("No".equals(dual.region)) {
+            if (dual.quad.is_empty()) {
+                if (dual.quad.getColorNo().equals(dual.quad.getColorNe()) &&
+                    dual.quad.getColorSe().equals(dual.quad.getColorSo()) &&
+                    dual.quad.getColorNo().equals(dual.quad.getColorSe())) {
+                    dual.quad.No = null;
                 }
             }
-           
+        } else if ("Ne".equals(dual.region)) {
+            if (dual.quad.is_empty()) {
+                if (dual.quad.getColorNo().equals(dual.quad.getColorNe()) &&
+                    dual.quad.getColorSe().equals(dual.quad.getColorSo()) &&
+                    dual.quad.getColorNo().equals(dual.quad.getColorSe())) {
+                    dual.quad.Ne = null;
+                }
+            }
+        } else if ("Se".equals(dual.region)) {
+            if (dual.quad.is_empty()) {
+                if (dual.quad.getColorNo().equals(dual.quad.getColorNe()) &&
+                    dual.quad.getColorSe().equals(dual.quad.getColorSo()) &&
+                    dual.quad.getColorNo().equals(dual.quad.getColorSe())) {
+                    dual.quad.Se = null;
+                }
+            }
+        } else if ("So".equals(dual.region)) { // Corrigé : "Ne" remplacé par "So"
+            if (dual.quad.is_empty()) {
+                if (dual.quad.getColorNo().equals(dual.quad.getColorNe()) &&
+                    dual.quad.getColorSe().equals(dual.quad.getColorSo()) &&
+                    dual.quad.getColorNo().equals(dual.quad.getColorSe())) {
+                    dual.quad.So = null;
+                }
+            }
+        } else {
+            throw new IllegalArgumentException("Erreur inconnue, merci de prendre contact avec les programmeurs");
         }
-        else if (dual.region=="Ne"){
-            if (dual.quad.is_empty()){
-                if ((dual.quad.getColorNo()==dual.quad.getColorNe())&&(dual.quad.getColorSe()==dual.quad.getColorSo())&&(dual.quad.getColorNo()==dual.quad.getColorSe())){
-                    dual.quad.Ne= null;
-                }
-            }
-           
-        }else if (dual.region=="Se"){
-            if (dual.quad.is_empty()){
-                if ((dual.quad.getColorNo()==dual.quad.getColorNe())&&(dual.quad.getColorSe()==dual.quad.getColorSo())&&(dual.quad.getColorNo()==dual.quad.getColorSe())){
-                    dual.quad.Se= null;
-                }
-            }
-        }else if (dual.region=="So"){
-            if (dual.quad.is_empty()){
-                if ((dual.quad.getColorNo()==dual.quad.getColorNe())&&(dual.quad.getColorSe()==dual.quad.getColorSo())&&(dual.quad.getColorNo()==dual.quad.getColorSe())){
-                    dual.quad.So= null;
-                }
-            }
-           
-        }else {
-            throw new IllegalArgumentException(" Erreur inconnue merci de prendre contact avec les programmeurs");
-        }
-
     }
+    
 
 
-
+    /*Complexité: 
+        Pire cas :O(n)
+    */
     public boolean equals(Quadtree quadtree_test){
         if (quadtree_test == null && this ==null){
             return true;

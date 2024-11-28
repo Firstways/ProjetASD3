@@ -60,4 +60,10 @@ public class Point {
             return false;
         }
     }
+
+    public String toString(){
+
+        return ("X :"+ this.x+" | Y :"+ this.y);
+
+    }
 }

@@ -5,7 +5,7 @@ public class Dual {
     public String region;
 
     public Dual (Quadtree quad, String r){
-        region = r;
+        this.region = r;
         this.quad = quad;
     }
 }

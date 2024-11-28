@@ -1,5 +1,4 @@
 
-import java.awt.Color;
 import java.io.FileWriter;
 
 public class App {
@@ -32,24 +31,14 @@ Les armuments sont :
        
         //Recuperation du fichier d'entrée,  et découpe
         if(strategie == 1){
-            MyFile myFile = new MyFile(entree);
+            MyFile myFile = new MyFile(entree,strategie);
             myFile.readFile();
             int image_size = myFile.getImageSize();
             Point[] point_add_to_quad= myFile.getPoints();
             Point[] region_to_recolor = myFile.getRecolors();
             int border_size = myFile.getBorderSize();
 
-            // System.out.print(image_size);
-            // for (Point p : point_add_to_quad){
-            //     System.out.println("X : "+p.getX()+ " Y : "+p.getY());
-                
-            // }
-
-            // for (Point p : region_to_recolor){
-            //     System.out.println("X : "+p.getX()+ " Y : "+p.getY());
-                
-            // }
-            //System.out.print(border_size);
+            // construction du Q Tree
             Quadtree quad = new Quadtree (point_add_to_quad[0]);
             quad.buildQTree(point_add_to_quad);
             System.out.println(point_add_to_quad.length);
@@ -57,8 +46,8 @@ Les armuments sont :
             Image img = new Image(image_size, image_size);
             quad.toImage(sortie+"/square_B", img, border_size);
             try {
-                img.save(sortie+"boyenvalbelouinsquare");
-                FileWriter writer = new FileWriter(sortie+"boyenvalbelouin.txt");
+                img.save(sortie+"boyenvalbelouinsargs_B");
+                FileWriter writer = new FileWriter(sortie+"boyenvalbelouinargs_B.txt");
                 String text_quad ="("+quad.toText()+")";
                 writer.write(text_quad);
                 writer.close();
@@ -70,13 +59,15 @@ Les armuments sont :
             }
 
             for (Point p : region_to_recolor){
+                System.out.print("points to recolor"+ p.toString());
+                System.out.println();
                 quad.reColor(p,p.getColor());
             }
             img = new Image(image_size, image_size);
             quad.toImage(sortie+"/square_R", img, border_size);
             try {
-                img.save(sortie+"boyenvalbelouinsquare");
-                FileWriter writer = new FileWriter(sortie+"boyenvalbelouin.txt");
+                img.save(sortie+"boyenvalbelouinsargs_R");
+                FileWriter writer = new FileWriter(sortie+"boyenvalbelouinsargs_R.txt");
                 String text_quad ="("+quad.toText()+")";
                 writer.write(text_quad);
                 writer.close();
@@ -87,9 +78,7 @@ Les armuments sont :
                 e.printStackTrace();
             }
 
-            for (Point p : region_to_recolor){
-                quad.reColor(p,p.getColor());
-            }
+
 
         }
            

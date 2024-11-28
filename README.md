@@ -1,6 +1,23 @@
 # ProjetASD3
 
-## Format du fichier d'entree
+
+## Arbre Quaternaire
+
+### Stratégie
+ _______
+|no |ne |
+|_ _|___|
+|so |se |
+|___|___|
+
+Quand un point est placé, il découpe notre abre quaternaire en 4 sous région:
+- no : en haut à gauche
+- ne : en haut à droite
+- so : en bas à gauche,
+- se : en bas à droite
+
+
+### Format du fichier d'entrée
 
 Le format du fichier d'entrée doit être de la forme:
 1000
@@ -28,5 +45,33 @@ Le format du fichier d'entrée doit être de la forme:
 // ligne m + 6: deuxième paire.
 // etc.
 // ligne m + 4 + k: dernière paire.
+
+Si le format n'est pas respecté, une erreur est levé
+
+
+
+## Arbre Ternaire
+
+Quand un point est placé, il découpe notre abre ternaire en 3 sous région:
+- O : Il représente toute la région de gauche
+- ne : en haut à droite
+- se : en bas à droite
+ _______
+|   |ne |
+| O |___|
+|   |se |
+|___|___|
+
+### Format du fichier d'entrée
+
+Ce qui change est le nombre de couleur après les points. Comme c'est un arbre ternaire, il n'y en a que 3 
+1000
+5
+600, 500, R, G, J
+900, 400, J, B, N
+800, 300, G, R, B
+850, 350, R, J, R
+540, 120, B, R, J
+
 
 Si le format n'est pas respecté, une erreur est levé

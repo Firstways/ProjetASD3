@@ -14,12 +14,15 @@ public class MyFile {
     private int nbRecolor;
     private Point[] reColor;
 
-   
+    private int strategie;
 
-    public MyFile(String file_path){
+
+
+    public MyFile(String file_path, int strategie){
         relative_file_path= file_path;
         fileLine = new ArrayList<>();
-        
+        this.strategie =strategie;
+
     }
 
     public void initNbPoint(int nb){
@@ -56,72 +59,145 @@ public class MyFile {
     }
     public int getBorderSize(){return borderSize;}
     public int getImageSize(){return windowSize;}
-    public Point[] getRecolors(){return reColor;}
+
+    public Point[] getRecolors(){
+        int width = getImageSize();
+        for (Point p : reColor){
+            p.setY(width-p.getY());
+        }
+        return reColor;
+    }
 
     public void readFile() throws IOException{
-        try {
-            // Ouvrir le fichier
-            BufferedReader reader = new BufferedReader(new FileReader(relative_file_path));
-            String line;
-            
+        if (strategie==1){
+            try {
+                // Ouvrir le fichier
+                BufferedReader reader = new BufferedReader(new FileReader(relative_file_path));
+                String line;
 
-            // Lire chaque ligne du fichier et l'ajouter à la liste
-            while ((line = reader.readLine()) != null) {
-                fileLine.add(line.trim()); // enlever les espaces inutiles
+
+                // Lire chaque ligne du fichier et l'ajouter à la liste
+                while ((line = reader.readLine()) != null) {
+                    fileLine.add(line.trim()); // enlever les espaces inutiles
+                }
+                reader.close();
+
+                String str = fileLine.get(0);
+                windowSize = Integer.parseInt(str);
+
+                //System.out.println(windowSize);
+
+                str = fileLine.get(1);
+                int nbPoints = Integer.parseInt(str);
+
+                //System.out.println(nbPoints);
+                initNbPoint(nbPoints);
+                for (int i = 2 ; i<nbPoints+2;i=i+1){
+                    str = fileLine.get(i);
+
+                    String[] pointData = str.split(",\\s*");
+                    int x = Integer.parseInt(pointData[0]);
+                    int y = Integer.parseInt(pointData[1]);
+                    Color c1 = parseColor(pointData[2]);
+                    Color c2 = parseColor(pointData[3]);
+                    Color c3 = parseColor(pointData[4]);
+
+                    Color c4 = parseColor(pointData[5]);
+                    Color[] c = {c1, c2, c3, c4};
+                    points[i-2] = new Point(x,y,c);
+                }
+
+                // Lecture de la taille de la bordure
+                borderSize = (Integer.parseInt(fileLine.get(2+nbPoints)));
+
+                nbRecolor = (Integer.parseInt(fileLine.get(3+nbPoints)));
+                initRecolor(nbRecolor);
+                for (int i = 0; i < nbRecolor; i++) {
+                    String[] colorData = fileLine.get(4+nbPoints+i).split(",\\s*");
+                    int x = Integer.parseInt(colorData[0]);
+                    int y = Integer.parseInt(colorData[1]);
+                    Color color = parseColor(colorData[2]);
+                    reColor[i]= new Point(x,y,color);;
+                }
+
+
+            } catch (IOException e) {
+                // Gérer les exceptions liées à l'ouverture ou à la lecture du fichier
+                System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
+                throw e; // Réémettre l'exception pour que l'appelant soit informé
+
+            } catch (NumberFormatException e) {
+                // Gérer les erreurs de conversion de chaîne en nombre
+                System.err.println("Erreur de format dans le fichier : " + e.getMessage());
+                throw new IOException("Le fichier contient des données mal formatées.", e);
+
+            } finally {
+
             }
-            reader.close();
+        }else{
+            try {
+                // Ouvrir le fichier
+                BufferedReader reader = new BufferedReader(new FileReader(relative_file_path));
+                String line;
 
-            String str = fileLine.get(0);
-            windowSize = Integer.parseInt(str);
-            
-            //System.out.println(windowSize);
 
-            str = fileLine.get(1);
-            int nbPoints = Integer.parseInt(str);
-            
-            //System.out.println(nbPoints);
-            initNbPoint(nbPoints);
-            for (int i = 2 ; i<nbPoints+2;i=i+1){
-                str = fileLine.get(i);
-                String[] pointData = str.split(",\\s*"); 
+                // Lire chaque ligne du fichier et l'ajouter à la liste
+                while ((line = reader.readLine()) != null) {
+                    fileLine.add(line.trim()); // enlever les espaces inutiles
+                }
+                reader.close();
 
-                int x = Integer.parseInt(pointData[0]);
-                int y = Integer.parseInt(pointData[1]);
-                Color c1 = parseColor(pointData[2]);
-                Color c2 = parseColor(pointData[3]);
-                Color c3 = parseColor(pointData[4]);
+                String str = fileLine.get(0);
+                windowSize = Integer.parseInt(str);
 
-                Color c4 = parseColor(pointData[5]);
-                Color[] c = {c1, c2, c3, c4};
-                points[i-2] = new Point(x,y,c);
+                //System.out.println(windowSize);
+
+                str = fileLine.get(1);
+                int nbPoints = Integer.parseInt(str);
+
+                //System.out.println(nbPoints);
+                initNbPoint(nbPoints);
+                for (int i = 2 ; i<nbPoints+2;i=i+1){
+                    str = fileLine.get(i);
+
+                    String[] pointData = str.split(",\\s*");
+                    int x = Integer.parseInt(pointData[0]);
+                    int y = Integer.parseInt(pointData[1]);
+                    Color c1 = parseColor(pointData[2]);
+                    Color c2 = parseColor(pointData[3]);
+                    Color c3 = parseColor(pointData[4]);
+
+                    Color[] c = {c1, c2, c3};
+                    points[i-2] = new Point(x,y,c);
+                }
+
+                // Lecture de la taille de la bordure
+                borderSize = (Integer.parseInt(fileLine.get(2+nbPoints)));
+
+                nbRecolor = (Integer.parseInt(fileLine.get(3+nbPoints)));
+                initRecolor(nbRecolor);
+                for (int i = 0; i < nbRecolor; i++) {
+                    String[] colorData = fileLine.get(4+nbPoints+i).split(",\\s*");
+                    int x = Integer.parseInt(colorData[0]);
+                    int y = Integer.parseInt(colorData[1]);
+                    Color color = parseColor(colorData[2]);
+                    reColor[i]= new Point(x,y,color);;
+                }
+
+
+            } catch (IOException e) {
+                // Gérer les exceptions liées à l'ouverture ou à la lecture du fichier
+                System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
+                throw e; // Réémettre l'exception pour que l'appelant soit informé
+
+            } catch (NumberFormatException e) {
+                // Gérer les erreurs de conversion de chaîne en nombre
+                System.err.println("Erreur de format dans le fichier : " + e.getMessage());
+                throw new IOException("Le fichier contient des données mal formatées.", e);
+
+            } finally {
+
             }
-
-            // Lecture de la taille de la bordure
-            borderSize = (Integer.parseInt(fileLine.get(2+nbPoints)));
-
-            nbRecolor = (Integer.parseInt(fileLine.get(3+nbPoints)));
-            initRecolor(nbRecolor);
-            for (int i = 0; i < nbRecolor; i++) {
-                String[] colorData = fileLine.get(4+nbPoints+i).split(",\\s*");
-                int x = Integer.parseInt(colorData[0]);
-                int y = Integer.parseInt(colorData[1]);
-                Color color = parseColor(colorData[2]);
-                reColor[i]= new Point(x,y,color);;
-            }
-
-
-        } catch (IOException e) {
-            // Gérer les exceptions liées à l'ouverture ou à la lecture du fichier
-            System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
-            throw e; // Réémettre l'exception pour que l'appelant soit informé
-    
-        } catch (NumberFormatException e) {
-            // Gérer les erreurs de conversion de chaîne en nombre
-            System.err.println("Erreur de format dans le fichier : " + e.getMessage());
-            throw new IOException("Le fichier contient des données mal formatées.", e);
-    
-        } finally {
-           
         }
     }
 
