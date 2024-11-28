@@ -117,9 +117,6 @@ public final class TernaireTree {
         int X_enfant = pointEnfant.getX();
         int Y_enfant = pointEnfant.getY();
 
-        System.out.println("Coordonnées du point parent : (" + X_parent + ", " + Y_parent + ")");
-        System.out.println("Coordonnées du point enfant : (" + X_enfant + ", " + Y_enfant + ")");
-
         if (X_enfant <= X_parent) {
             if (this.ouest != null) {
                 if (this.ouest.getPoint().equals(pointEnfant)) {
@@ -128,7 +125,6 @@ public final class TernaireTree {
                     return this.getOuest().searchTTree(pointEnfant);
                 }
             } else {
-                System.out.println("ouest");
                 return new Dual(this, "ouest");
             }
         } else if (X_enfant > X_parent && Y_enfant <= Y_parent) {
@@ -139,7 +135,6 @@ public final class TernaireTree {
                     return this.getNordEst().searchTTree(pointEnfant);
                 }
             } else {
-                System.out.println("nordEst");
                 return new Dual(this, "nordEst");
             }
         } else if (X_enfant > X_parent && Y_enfant > Y_parent) {
@@ -150,7 +145,6 @@ public final class TernaireTree {
                     return this.getSudEst().searchTTree(pointEnfant);
                 }
             } else {
-                System.out.println("sudEst");
                 return new Dual(this, "sudEst");
             }
         } else {
@@ -185,56 +179,40 @@ public final class TernaireTree {
         }
     }
 
-    public void printBorderHorizontal(Image img, int border,int Xmin,int Ymin, int Xmax, int Ymax){
-        System.out.println(Xmin);
-        System.out.println(Ymin);
+    public void printBorderVertical(Image img, int border,int Xmin,int Ymin, int Xmax, int Ymax){
+        //img.setRectangle(Xmin,Ymin,Xmax,Ymax+border,Color.BLACK);
+        img.setRectangle(Xmin,Ymin,Xmax+border,Ymax,Color.BLACK);
 
-        System.out.println(Xmax+border);
-        System.out.println(Ymax);
-
-        System.out.println("quad X " +this.getPoint().getX());
-        System.out.println("quad Y "+this.getPoint().getY());
-
-        img.setRectangle(Xmin,Ymin,Xmax,Ymax+border,Color.BLACK);
 
         if (this.ouest != null){
-            System.out.println("O");
-            this.ouest.printBorderHorizontal(img,border,this.ouest.getPoint().getX(),this.ouest.getPoint().getY(),this.getPoint().getX(),this.ouest.getPoint().getY());
+            this.ouest.printBorderVertical(img,border,this.ouest.getPoint().getX(),Ymin,this.ouest.getPoint().getX(),Ymax);
         }
 
         if (this.nordEst != null){
-            System.out.println("Ne");
-            this.nordEst.printBorderHorizontal(img,border, this.getPoint().getX(), this.nordEst.getPoint().getY(),Xmax,this.nordEst.getPoint().getY() );
-
-
+            this.nordEst.printBorderVertical(img,border,this.nordEst.getPoint().getX(),Ymin,this.nordEst.getPoint().getX(),this.getPoint().getY());
         }
 
         if (this.sudEst != null){
-            System.out.println("Se");
-            this.sudEst.printBorderHorizontal(img,border, this.getPoint().getX(), this.sudEst.getPoint().getY(),Xmax,this.sudEst.getPoint().getY());
-
+            this.sudEst.printBorderVertical(img,border,this.sudEst.getPoint().getX(),this.getPoint().getY(),this.sudEst.getPoint().getX(),Ymax);
         } 
 
     }
 
-    public void printBorderVertical(Image img, int border,int Xmin,int Ymin, int Xmax, int Ymax){
+    public void printBorderHorizontal(Image img, int border,int Xmin,int Ymin, int Xmax, int Ymax){
         if (this == null){
             return;
         }else { 
-            img.setRectangle(Xmin,Ymin,Xmax+border,Ymax,Color.BLACK);
+            img.setRectangle(Xmin,Ymin,Xmax,Ymax+border,Color.BLACK);
             if (this.ouest != null){
-                System.out.println("O");
-                this.ouest.printBorderVertical(img,border,this.ouest.getPoint().getX(), Ymin,this.ouest.getPoint().getX(),this.getPoint().getY()  ); 
+                this.ouest.printBorderHorizontal(img,border,this.ouest.getPoint().getX(),this.ouest.getPoint().getY(),this.getPoint().getX(),this.ouest.getPoint().getY()); 
             }
 
             if (this.nordEst != null){
-                System.out.println("Ne");
-                this.nordEst.printBorderVertical(img,border, this.nordEst.getPoint().getX(),Ymin,this.nordEst.getPoint().getX(),this.getPoint().getY() );
+                this.nordEst.printBorderHorizontal(img,border,this.nordEst.getPoint().getX(),this.nordEst.getPoint().getY(),Xmax,this.nordEst.getPoint().getY());
             }
 
             if (this.sudEst != null){
-                System.out.println("Se");
-                this.sudEst.printBorderVertical(img,border,this.sudEst.getPoint().getX(),this.getPoint().getY(),this.sudEst.getPoint().getX(),Ymax);
+                this.sudEst.printBorderHorizontal(img,border,this.sudEst.getPoint().getX(),this.sudEst.getPoint().getY(),Xmax,this.sudEst.getPoint().getY());
             }
         }
     
@@ -245,22 +223,19 @@ public final class TernaireTree {
         if (this == null){
             return;
         }else { 
-            img.setRectangle(Xmin, Ymin, this.getPoint().getX(), Ymax, getColorO());
-            img.setRectangle( this.getPoint().getX(),Ymin,Xmax, this.getPoint().getY(), getColorNe());
-            img.setRectangle(this.point.getX(),this.point.getY(), Xmax, Ymax, getColorSe());
+            img.setRectangle(Xmin, Ymin, Xmax, Ymax, getColorO());
+            img.setRectangle(this.getPoint().getX(),Ymin,Xmax, this.getPoint().getY(), getColorNe());
+            img.setRectangle(this.getPoint().getX(),this.getPoint().getY(), Xmax, Ymax, getColorSe());
            
             if (this.ouest != null){
-                System.out.println("O");
-                this.ouest.toImageEncaps(filename, img, Xmin, Ymin, this.getPoint().getX(), this.getPoint().getY());
+                this.ouest.toImageEncaps(filename, img, Xmin, Ymin, this.getPoint().getX(), Ymax);
             }
 
             if (this.nordEst != null){
-                System.out.println("Ne");
-                this.nordEst.toImageEncaps(filename, img, Xmin, Ymin, Xmax, this.getPoint().getY());
+                this.nordEst.toImageEncaps(filename, img, this.getPoint().getX(), Ymin, Xmax, this.getPoint().getY());
             }
 
             if (this.sudEst != null){
-                System.out.println("Se");
                 this.sudEst.toImageEncaps(filename, img, this.getPoint().getX(), this.getPoint().getY(), Xmax, Ymax);
             }         
         }
@@ -272,8 +247,8 @@ public final class TernaireTree {
      */
     public void toImage(String filename,Image img, int border){
       toImageEncaps(filename, img, 0, 0, img.width(), img.height());
-      printBorderVertical(img ,border,this.getPoint().getX(),0,this.getPoint().getX(), img.width()); 
-      printBorderHorizontal(img ,border,this.getPoint().getY(),this.getPoint().getY(),img.width(),this.getPoint().getY()); 
+      printBorderVertical(img,  border, this.getPoint().getX(),0,                       this.getPoint().getX(), img.width()); 
+      printBorderHorizontal(img,border, this.getPoint().getX(),this.getPoint().getY(),  img.width(),this.getPoint().getY()); 
     }
 
 
