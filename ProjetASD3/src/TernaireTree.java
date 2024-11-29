@@ -48,29 +48,20 @@ public final class TernaireTree {
 
     public String colorIdentifier(Color color ){
         if (color.equals(Color.RED)) {
-            return "ROUGE";
+            return "R";
         } else if (color.equals(Color.BLUE)) {
-            return "BLEU";
-        } else if (color.equals(Color.GREEN)) {
-            return "VERT";
+            return "B";
         } else if (color.equals(Color.YELLOW)) {
-            return "JAUNE";
-        } else if (color.equals(Color.CYAN)) {
-            return "CYAN";
-        } else if (color.equals(Color.MAGENTA)) {
-            return "MAGENTA";
+            return "J";
         } else if (color.equals(Color.GRAY)) {
-            return "GRIS";
-        } else if (color.equals(Color.PINK)) {
-            return "ROSE";
-        } else if (color.equals(Color.ORANGE)) {
-            return "ORANGE";
+            return "G";
         } else if (color.equals(Color.BLACK)) {
-            return "NOIR";
+            return "N";
         } else {
             return "INCONNU";
         }
     }
+
 
     public Color getColorO(){
         return this.getPoint().getColors()[0];
@@ -174,7 +165,6 @@ public final class TernaireTree {
      */
     public void buildTTree(Point[] points) {
         for (int k = 1; k < points.length; k++) {
-            System.out.println("point " + k);
             this.addTTree(points[k]);
         }
     }
@@ -255,32 +245,36 @@ public final class TernaireTree {
     /*
      * Représentation textuelle de l'arbre (parcours symétrique).
      */
-    public void toText() {
-        if (this.getOuest() == null) {
-            System.out.print("OUEST(" + this.getPoint().getX() + "," + this.getPoint().getY() + "), ");
+    public String toText(){
+        /*
+        * Si c'est une feuille j'écris la couleur
+        * Sinon j'ouvre une parenthèse et je descends de 1
+        */
+        String s1 ="";
+        if (this.getOuest()==null){
+            s1 +=this.getColorOString();
+        } else {
+            s1+="(";
+            s1+=this.getOuest().toText();
+            s1+=")";
         }
-        if (this.getNordEst() == null) {
-            System.out.print("NORDEST(" + this.getPoint().getX() + "," + this.getPoint().getY() + "), ");
+        if (this.getNordEst()==null){
+            s1 +=this.getColorNeString();
+        }else {
+            s1+="(";
+            s1+=this.getNordEst().toText();
+            s1+=")";
         }
-        if (this.getSudEst() == null) {
-            System.out.print("SUDEST(" + this.getPoint().getX() + "," + this.getPoint().getY() + "), ");
-        }
+        if (this.getSudEst()==null){
+            s1 +=this.getColorSeString();
 
-        if (this.getOuest() != null) {
-            System.out.print("(");
-            this.getOuest().toText();
-            System.out.print(")");
+        }else {
+            s1+="(";            
+
+            s1+=this.getSudEst().toText();
+            s1+=")";
         }
-        if (this.getNordEst() != null) {
-            System.out.print("(");
-            this.getNordEst().toText();
-            System.out.print(")");
-        }
-        if (this.getSudEst() != null) {
-            System.out.print("(");
-            this.getSudEst().toText();
-            System.out.print(")");
-        }
+        return s1;
     }
 
     public void reColor(Point p, Color color){
@@ -289,13 +283,13 @@ public final class TernaireTree {
         Dual dual = searchTTree(p);
 
         if (dual.region=="ouest"){
-            this.getPoint().setColor(color,0);
-        }else if (dual.region=="nordEst"){
-            this.getPoint().setColor(color,1);
 
+            dual.ternaire.getPoint().setColor(color,0);
+        }else if (dual.region=="nordEst"){
+            dual.ternaire.getPoint().setColor(color,1);
         }
         else if (dual.region=="sudEst"){
-            this.getPoint().setColor(color,2);
+            dual.ternaire.getPoint().setColor(color,2);
 
         }else {
             throw new IllegalArgumentException(" Erreur inconnue merci de prendre contact avec les programmeurs");
@@ -304,14 +298,36 @@ public final class TernaireTree {
     }
 
     public void compressTTree(Dual dual){
-        Point p2 = this.getPoint();
+         if (dual.ternaire.is_empty()){
+            if (dual.ternaire.getColorO().equals(dual.ternaire.getColorNe()) &&
+                dual.ternaire.getColorSe().equals(dual.ternaire.getColorO())) {
+                System.out.println("true");
+
+                Dual parent = searchTTree(dual.ternaire.getPoint());
+                System.out.println("parent "+ parent.ternaire.getPoint().toString());
+                System.out.println("parent "+ parent.region);
+                if (parent.region.equals("ouest")){
+                    parent.ternaire.ouest = null;
+                    parent.ternaire.getPoint().setColor(dual.ternaire.getColorO(), 0);
+                }
+                if (parent.region.equals("nordEst")){
+                    parent.ternaire.nordEst = null;
+                    parent.ternaire.getPoint().setColor(dual.ternaire.getColorO(), 1);
+                }
+                if (parent.region.equals("sudEst")){
+                    parent.ternaire.sudEst = null;
+                    parent.ternaire.getPoint().setColor(dual.ternaire.getColorO(), 2);
+                }
+            }
+            
+        }
+        
         if (dual.region=="ouest"){
             if (dual.ternaire.is_empty()){
                 if ((dual.ternaire.getColorO()==dual.ternaire.getColorNe())&&(dual.ternaire.getColorSe()==dual.ternaire.getColorO())){
                     dual.ternaire.ouest= null;
                 }
             }
-           
         }
         else if (dual.region=="nordEst"){
             if (dual.ternaire.is_empty()){
@@ -319,7 +335,6 @@ public final class TernaireTree {
                     dual.ternaire.nordEst= null;
                 }
             }
-           
         }else if (dual.region=="sudEst"){
             if (dual.ternaire.is_empty()){
                 if ((dual.ternaire.getColorO()==dual.ternaire.getColorNe())&&(dual.ternaire.getColorSe()==dual.ternaire.getColorO())){
@@ -329,6 +344,5 @@ public final class TernaireTree {
         }else {
             throw new IllegalArgumentException(" Erreur inconnue merci de prendre contact avec les programmeurs");
         }
-
     }
 }
