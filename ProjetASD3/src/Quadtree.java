@@ -139,7 +139,7 @@ public class Quadtree {
     
         System.out.println("Coordonnées du point parent : (" + X_parent + ", " + Y_parent + ")");
         System.out.println("Coordonnées du point enfant : (" + X_enfant + ", " + Y_enfant + ")");
-        if (X_enfant <=X_parent && Y_enfant < Y_parent) {
+        if (X_enfant <=X_parent && Y_enfant <= Y_parent) {
         
             if (this.No !=null){
                 if (this.No.getPoint().equals(point_enfant)){
@@ -155,7 +155,7 @@ public class Quadtree {
             
         }
         // appartient a la region 2
-        else if (X_enfant >X_parent &&Y_enfant < Y_parent ) {
+        else if (X_enfant >X_parent &&Y_enfant <= Y_parent ) {
             if (this.Ne !=null){
                 if (this.Ne.getPoint().equals(point_enfant)){
                     return new Dual(this,"Ne");
@@ -481,6 +481,7 @@ public class Quadtree {
             throw new IllegalArgumentException(" Erreur inconnue merci de prendre contact avec les programmeurs");
         }
         compressQTree(dual);
+
     }
 
 
@@ -492,45 +493,44 @@ public class Quadtree {
      * Précondition : le point appartient au quad tree
      */
     /*Complexité: 
-        Pire cas :O(1) 
+        Pire cas :O(h(a)) 
     */
     public void compressQTree(Dual dual) {
-        
-        if ("No".equals(dual.region)) {
-            if (dual.quad.is_empty()) {
-                if (dual.quad.getColorNo().equals(dual.quad.getColorNe()) &&
-                    dual.quad.getColorSe().equals(dual.quad.getColorSo()) &&
-                    dual.quad.getColorNo().equals(dual.quad.getColorSe())) {
-                    dual.quad.No = null;
+        if (dual.quad.is_empty()){
+            System.out.println("color "+dual.quad.getColorNoString());
+            System.out.println("color "+dual.quad.getColorNeString());
+            System.out.println("color "+dual.quad.getColorSoString());
+            System.out.println("color "+dual.quad.getColorSoString());
+
+            if (dual.quad.getColorNo().equals(dual.quad.getColorNe()) &&
+                dual.quad.getColorSe().equals(dual.quad.getColorSo()) &&
+                dual.quad.getColorNo().equals(dual.quad.getColorSe())) {
+                System.out.println("true");
+
+                Dual parent = searchQTree(dual.quad.getPoint());
+                System.out.println("parent "+ parent.quad.getPoint().toString());
+                System.out.println("parent "+ parent.region);
+                if (parent.region.equals("No")){
+                    parent.quad.No = null;
+                    parent.quad.getPoint().setColor(dual.quad.getColorNo(), 0);
+                }
+                if (parent.region.equals("Ne")){
+                    parent.quad.Ne = null;
+                    parent.quad.getPoint().setColor(dual.quad.getColorNo(), 1);
+                }
+                if (parent.region.equals("Se")){
+                    parent.quad.Se = null;
+                    parent.quad.getPoint().setColor(dual.quad.getColorNo(), 2);
+                }
+                if (parent.region.equals("So")){
+                    parent.quad.So = null;
+                    parent.quad.getPoint().setColor(dual.quad.getColorNo(), 3);
                 }
             }
-        } else if ("Ne".equals(dual.region)) {
-            if (dual.quad.is_empty()) {
-                if (dual.quad.getColorNo().equals(dual.quad.getColorNe()) &&
-                    dual.quad.getColorSe().equals(dual.quad.getColorSo()) &&
-                    dual.quad.getColorNo().equals(dual.quad.getColorSe())) {
-                    dual.quad.Ne = null;
-                }
-            }
-        } else if ("Se".equals(dual.region)) {
-            if (dual.quad.is_empty()) {
-                if (dual.quad.getColorNo().equals(dual.quad.getColorNe()) &&
-                    dual.quad.getColorSe().equals(dual.quad.getColorSo()) &&
-                    dual.quad.getColorNo().equals(dual.quad.getColorSe())) {
-                    dual.quad.Se = null;
-                }
-            }
-        } else if ("So".equals(dual.region)) { // Corrigé : "Ne" remplacé par "So"
-            if (dual.quad.is_empty()) {
-                if (dual.quad.getColorNo().equals(dual.quad.getColorNe()) &&
-                    dual.quad.getColorSe().equals(dual.quad.getColorSo()) &&
-                    dual.quad.getColorNo().equals(dual.quad.getColorSe())) {
-                    dual.quad.So = null;
-                }
-            }
-        } else {
-            throw new IllegalArgumentException("Erreur inconnue, merci de prendre contact avec les programmeurs");
+            
         }
+
+           
     }
     
 
