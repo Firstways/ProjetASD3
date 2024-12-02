@@ -8,7 +8,9 @@ public class Param {
     private Color col; 
     private String filename;
 
+    public Param(){
 
+    }
     public int getStartX() {
         return startX;
     }
