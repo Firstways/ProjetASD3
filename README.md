@@ -7,11 +7,13 @@ Les noms des fichiers args.txt, test1.txt à test5.txt, sont des tests pour les 
 ## Arbre Quaternaire
 
 ### Stratégie
+```
  _______
 |no |ne |
 |_ _|___|
 |so |se |
 |___|___|
+```
 
 Quand un point est placé, il découpe notre arbre quaternaire en 4 sous région:
 - no : en haut à gauche
@@ -69,12 +71,13 @@ Quand un point est placé, il découpe notre abre ternaire en 3 sous région:
 - O : Il représente toute la région de gauche
 - ne : en haut à droite
 - se : en bas à droite
+ ```
  _______
 |   |ne |
 | O |___|
 |   |se |
 |___|___|
-
+```
 ### Format du fichier d'entrée
 
 Ce qui change est le nombre de couleur après les points. Comme c'est un arbre ternaire, il n'y en a que 3
