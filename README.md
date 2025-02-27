@@ -25,6 +25,7 @@ Quand un point est placé, il découpe notre arbre quaternaire en 4 sous région
 ### Format du fichier d'entrée
 
 Le format du fichier d'entrée doit être de la forme:
+```
 1000
 5
 600, 500, R, G, J, B
@@ -50,16 +51,16 @@ Le format du fichier d'entrée doit être de la forme:
 // ligne m + 6: deuxième paire.
 // etc.
 // ligne m + 4 + k: dernière paire.
-
-
+```
 
 
 ## Arbre Ternaire
 
 Compilation:
-javac -source 1.7 -target 1.7 -d boyenvalbelouin/bin boyenvalbelouin/src/*.java
+```javac -source 1.7 -target 1.7 -d boyenvalbelouin/bin boyenvalbelouin/src/*.java```
+
 Execution:
-java -classpath boyenvalbelouin/bin MonBoTablo 2 boyenvalbelouin/test1.txt boyenvalbelouin/Sortie/
+```java -classpath boyenvalbelouin/bin MonBoTablo 2 boyenvalbelouin/test1.txt boyenvalbelouin/Sortie/```
 
 
 **MonBoTablo :** Nom du programme principale
